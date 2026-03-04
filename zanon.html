@@ -505,14 +505,14 @@
         // Share Options
         function shareWhatsApp() {
             const url = encodeURIComponent(window.location.href);
-            window.open(https://api.whatsapp.com/send?text=${url}, '_blank');
+            window.open(`https://api.whatsapp.com/send?text=${url}`, '_blank');
             closeShareModal();
         }
 
         function shareEmail() {
             const url = encodeURIComponent(window.location.href);
             const title = document.documentElement.getAttribute('lang') === 'en' ? 'Check out this Malta Itinerary' : 'Confira este roteiro de Malta';
-            window.open(mailto:?subject=${title}&body=${url}, '_self');
+            window.open(`mailto:?subject=${title}&body=${url}`, '_self');
             closeShareModal();
         }
 
