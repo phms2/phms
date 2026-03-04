@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Vacation Master Plan</title>
+    
+    <!-- Tailwind CSS configuration for Dark Mode -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {}
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Print specific adjustments to preserve colors and hide UI controls */
+        @media print {
+            .no-print { display: none !important; }
+            body { 
+                background: white !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                padding: 0 !important;
+            }
+            #app { padding: 0 !important; }
+            .shadow-sm, .shadow-md { box-shadow: none !important; border: 1px solid #e5e7eb; }
+        }
+        
+        /* Smooth transitions for dark mode */
+        body, div { transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 font-sans text-gray-800 dark:text-gray-100">
+
+    <div id="app" class="max-w-7xl mx-auto"></div>
+
+    <script>
+        // --- APP STATE ---
+        let currentLang = 'en';
+        let isDarkMode = false;
+        let isShareOpen = false;
+
+        // --- CONFIGURATION ---
+        const year = 2026;
+        
+        // Dictionaries for i18n
+        const dict = {
+            en: {
+                title: "2026 Vacation Master Plan",
+                subtitle: "27 Days Annual Leave • All Birthdays Maximized • 0 Buffer",
+                controls: {
+                    lang: "PT-BR",
+                    dark: "Dark Mode",
+                    light: "Light Mode",
+                    print: "Print",
+                    share: "Share",
+                    shareWeb: "Share...",
+                    shareCopy: "Copy Link",
+                    shareWa: "WhatsApp",
+                    shareEmail: "Email"
+                },
+                labels: {
+                    booked: "Booked (24)",
+                    mandatory: "Mandatory (3)",
+                    gifted: "Gifted (Free)",
+                    paternity: "Paternity (10)",
+                    rolled: "Rolled Over (2025)"
+                },
+                months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                daysHeader: ['S','M','T','W','T','F','S'],
+                notes: {
+                    0: "Used 2025 Rollover (Jan 2)",
+                    1: "Daughter Born Feb 19! (Paternity)",
+                    2: "Return Mar 5 + Bday Run (6 Days)",
+                    3: "Easter Break (9 Days)",
+                    4: "Worker's Day Bridge (4 Days)",
+                    5: "Wife's Bday (4d) + Mnarja (4d)",
+                    6: "Friends Visiting (10 Days)",
+                    7: "Santa Marija Heat Escape (5 Days)",
+                    8: "Son's Bday Extended (4 Days)",
+                    11: "Xmas Shutdown (16 Days!)"
+                },
+                holidays: {
+                    "2026-01-01": "New Year's Day",
+                    "2026-02-10": "Feast of St. Paul's Shipwreck",
+                    "2026-03-19": "Feast of St. Joseph",
+                    "2026-03-31": "Freedom Day",
+                    "2026-04-03": "Good Friday",
+                    "2026-05-01": "Worker's Day",
+                    "2026-06-07": "Sette Giugno",
+                    "2026-06-29": "Feast of St. Peter & St. Paul (Mnarja)",
+                    "2026-08-15": "Feast of the Assumption (Santa Marija)",
+                    "2026-09-08": "Victory Day",
+                    "2026-09-21": "Independence Day",
+                    "2026-12-08": "Immaculate Conception",
+                    "2026-12-13": "Republic Day",
+                    "2026-12-25": "Christmas Day",
+                    "2026-12-26": "Boxing Day (UK/Common)" 
+                },
+                special: {
+                    myBday: "My Birthday (Free!)",
+                    wifeBday: "Wife's Birthday",
+                    sonBday: "Son's Birthday (Indep. Day)",
+                    daughterBday: "Daughter's Birthday!"
+                },
+                status: {
+                    holiday: "Public Holiday",
+                    gift: "Company Gift (Paid/Free)",
+                    mandatory: "Mandatory (Deducted)",
+                    rolled: "Rolled Over (2025)",
+                    booked: "Annual Leave",
+                    paternity: "Paternity Leave",
+                    weekend: "Weekend",
+                    work: "Work Day"
+                }
+            },
+            pt: {
+                title: "Plano de Férias 2026",
+                subtitle: "27 Dias de Férias • Aniversários Maximizados • 0 Saldo",
+                controls: {
+                    lang: "EN-EN",
+                    dark: "Modo Escuro",
+                    light: "Modo Claro",
+                    print: "Imprimir",
+                    share: "Partilhar",
+                    shareWeb: "Partilhar...",
+                    shareCopy: "Copiar Link",
+                    shareWa: "WhatsApp",
+                    shareEmail: "E-mail"
+                },
+                labels: {
+                    booked: "Marcado (24)",
+                    mandatory: "Obrigatório (3)",
+                    gifted: "Oferecido (Livre)",
+                    paternity: "Paternidade (10)",
+                    rolled: "Acumulado (2025)"
+                },
+                months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+                daysHeader: ['D','S','T','Q','Q','S','S'],
+                notes: {
+                    0: "Uso do Acumulado 2025 (2 Jan)",
+                    1: "Nasc. da Filha! 19 Fev (Paternidade)",
+                    2: "Retorno 5 Mar + Aniversário (6 Dias)",
+                    3: "Pausa de Páscoa (9 Dias)",
+                    4: "Ponte Dia do Trabalhador (4 Dias)",
+                    5: "Aniv. Esposa (4d) + Mnarja (4d)",
+                    6: "Visita de Amigos (10 Dias)",
+                    7: "Fuga do Calor Santa Marija (5 Dias)",
+                    8: "Aniv. do Filho Estendido (4 Dias)",
+                    11: "Recesso de Natal (16 Dias!)"
+                },
+                holidays: {
+                    "2026-01-01": "Ano Novo",
+                    "2026-02-10": "Naufrágio de São Paulo",
+                    "2026-03-19": "Dia de São José",
+                    "2026-03-31": "Dia da Liberdade",
+                    "2026-04-03": "Sexta-feira Santa",
+                    "2026-05-01": "Dia do Trabalhador",
+                    "2026-06-07": "Sette Giugno",
+                    "2026-06-29": "São Pedro e São Paulo (Mnarja)",
+                    "2026-08-15": "Assunção de Maria (Santa Marija)",
+                    "2026-09-08": "Dia da Vitória",
+                    "2026-09-21": "Dia da Independência",
+                    "2026-12-08": "Imaculada Conceição",
+                    "2026-12-13": "Dia da República",
+                    "2026-12-25": "Natal",
+                    "2026-12-26": "Boxing Day (UK/Comum)" 
+                },
+                special: {
+                    myBday: "Meu Aniversário (Livre!)",
+                    wifeBday: "Aniversário da Esposa",
+                    sonBday: "Aniversário do Filho (Indep.)",
+                    daughterBday: "Nascimento da Filha!"
+                },
+                status: {
+                    holiday: "Feriado",
+                    gift: "Oferecido pela Empresa",
+                    mandatory: "Obrigatório (Descontado)",
+                    rolled: "Acumulado (2025)",
+                    booked: "Férias Anuais",
+                    paternity: "Licença Paternidade",
+                    weekend: "Fim de Semana",
+                    work: "Dia de Trabalho"
+                }
+            }
+        };
+
+        const giftedLeave = ["2026-03-24", "2026-12-24", "2026-12-31"];
+        const rolledOverLeave = ["2026-01-02"];
+        const paternityLeave = [
+            "2026-02-19", "2026-02-20", "2026-02-23", "2026-02-24", "2026-02-25", 
+            "2026-02-26", "2026-02-27", "2026-03-02", "2026-03-03", "2026-03-04"
+        ];
+        const bookedLeave = [
+            "2026-03-20", "2026-03-23", "2026-03-30", "2026-04-01", "2026-04-02", 
+            "2026-05-04", "2026-06-08", "2026-06-09", "2026-06-30", "2026-07-13", 
+            "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-20", 
+            "2026-08-12", "2026-08-13", "2026-08-14", "2026-09-07", "2026-09-22", 
+            "2026-12-07", "2026-12-21", "2026-12-22", "2026-12-23", "2026-12-28", 
+            "2026-12-29", "2026-12-30"
+        ];
+        const mandatoryDeducted = ["2026-12-28", "2026-12-29", "2026-12-30"];
+
+        // --- UTILS ---
+        const getDaysInMonth = (monthIndex, year) => new Date(year, monthIndex + 1, 0).getDate();
+        const getFirstDayOfMonth = (monthIndex, year) => new Date(year, monthIndex, 1).getDay();
+        const formatDate = (year, month, day) => `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+        const getDayStatus = (dateStr, dayOfWeek, t) => {
+            if (dateStr === "2026-03-24") return { type: 'gift', label: t.special.myBday };
+            if (dateStr === "2026-06-09") return { type: 'booked', label: t.special.wifeBday };
+            if (dateStr === "2026-09-21") return { type: 'holiday', label: t.special.sonBday };
+            if (dateStr === "2026-02-19") return { type: 'paternity', label: t.special.daughterBday };
+
+            if (t.holidays[dateStr]) return { type: 'holiday', label: t.holidays[dateStr] };
+            if (giftedLeave.includes(dateStr)) return { type: 'gift', label: t.status.gift };
+            if (mandatoryDeducted.includes(dateStr)) return { type: 'mandatory', label: t.status.mandatory };
+            if (rolledOverLeave.includes(dateStr)) return { type: 'rolled-over', label: t.status.rolled };
+            if (bookedLeave.includes(dateStr)) return { type: 'booked', label: t.status.booked };
+            if (paternityLeave.includes(dateStr)) return { type: 'paternity', label: t.status.paternity };
+            if (dayOfWeek === 0 || dayOfWeek === 6) return { type: 'weekend', label: t.status.weekend };
+            return { type: 'work', label: t.status.work };
+        };
+
+        const getStatusColor = (type) => {
+            switch (type) {
+                case 'holiday': return 'bg-red-500 text-white font-bold dark:bg-red-600';
+                case 'gift': return 'bg-purple-500 text-white font-bold ring-1 ring-purple-300 dark:bg-purple-600 dark:ring-purple-400';
+                case 'mandatory': return 'bg-orange-500 text-white font-bold ring-1 ring-orange-300 dark:bg-orange-600 dark:ring-orange-400';
+                case 'rolled-over': return 'bg-teal-600 text-white font-bold ring-1 ring-teal-300 dark:bg-teal-700 dark:ring-teal-400';
+                case 'booked': return 'bg-blue-600 text-white font-bold ring-1 ring-blue-300 dark:bg-blue-700 dark:ring-blue-400';
+                case 'weekend': return 'bg-gray-200 text-gray-400 dark:bg-gray-800 dark:text-gray-500';
+                case 'paternity': return 'bg-green-500 text-white font-bold ring-1 ring-green-300 dark:bg-green-600 dark:ring-green-400';
+                default: return 'bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+            }
+        };
+
+        // --- ACTIONS ---
+        const toggleLang = () => { currentLang = currentLang === 'en' ? 'pt' : 'en'; renderApp(); };
+        const toggleTheme = () => { 
+            isDarkMode = !isDarkMode; 
+            document.documentElement.classList.toggle('dark', isDarkMode);
+            renderApp();
+        };
+        const handlePrint = () => { window.print(); };
+        const toggleShareMenu = () => {
+            isShareOpen = !isShareOpen;
+            const menu = document.getElementById('shareDropdown');
+            if(menu) menu.classList.toggle('hidden', !isShareOpen);
+        };
+        const executeShare = async (type) => {
+            const url = window.location.href;
+            const text = "Check out my 2026 Vacation Master Plan!";
+            
+            isShareOpen = false;
+            document.getElementById('shareDropdown')?.classList.add('hidden');
+
+            if (type === 'web' && navigator.share) {
+                try { await navigator.share({ title: '2026 Vacation Plan', text, url }); } 
+                catch (err) { console.error("Share failed:", err); }
+            } else if (type === 'copy') {
+                navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard!"));
+            } else if (type === 'wa') {
+                window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`, '_blank');
+            } else if (type === 'email') {
+                window.location.href = `mailto:?subject=2026 Vacation Plan&body=${encodeURIComponent(text + "\n\n" + url)}`;
+            }
+        };
+
+        // --- RENDER ---
+        const renderApp = () => {
+            const t = dict[currentLang];
+            const monthsNames = t.months;
+            const daysHeader = t.daysHeader;
+
+            let html = `
+                <!-- Top Action Bar (No Print) -->
+                <div class="mb-4 flex flex-wrap justify-end gap-2 no-print">
+                    <button id="btnLang" class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
+                        <i data-lucide="languages" class="w-4 h-4"></i>
+                        ${t.controls.lang}
+                    </button>
+                    <button id="btnTheme" class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
+                        <i data-lucide="${isDarkMode ? 'sun' : 'moon'}" class="w-4 h-4"></i>
+                        ${isDarkMode ? t.controls.light : t.controls.dark}
+                    </button>
+                    <button id="btnPrint" class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        ${t.controls.print}
+                    </button>
+                    
+                    <div class="relative">
+                        <button id="btnShareToggle" class="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition text-sm font-medium">
+                            <i data-lucide="share-2" class="w-4 h-4"></i>
+                            ${t.controls.share}
+                        </button>
+                        
+                        <div id="shareDropdown" class="${isShareOpen ? '' : 'hidden'} absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50 border border-gray-100 dark:border-gray-700">
+                            <div class="py-1">
+                                ${navigator.share ? `
+                                <button data-share-type="web" class="share-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                                    <i data-lucide="smartphone" class="w-4 h-4"></i> ${t.controls.shareWeb}
+                                </button>
+                                ` : ''}
+                                <button data-share-type="copy" class="share-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                                    <i data-lucide="copy" class="w-4 h-4"></i> ${t.controls.shareCopy}
+                                </button>
+                                <button data-share-type="wa" class="share-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i> ${t.controls.shareWa}
+                                </button>
+                                <button data-share-type="email" class="share-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                                    <i data-lucide="mail" class="w-4 h-4"></i> ${t.controls.shareEmail}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Header Section -->
+                <div class="mb-8">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-blue-600 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-colors">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
+                                <i data-lucide="calendar" class="w-8 h-8 text-blue-600 dark:text-blue-400"></i>
+                                ${t.title}
+                            </h1>
+                            <p class="text-gray-500 dark:text-gray-400 mt-1">${t.subtitle}</p>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-3 text-sm">
+                            <div class="flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full border border-blue-200 dark:border-blue-800">
+                                <div class="w-3 h-3 bg-blue-600 dark:bg-blue-500 rounded-full"></div> ${t.labels.booked}
+                            </div>
+                            <div class="flex items-center gap-2 px-3 py-1 bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 rounded-full border border-orange-200 dark:border-orange-800">
+                                <div class="w-3 h-3 bg-orange-500 rounded-full"></div> ${t.labels.mandatory}
+                            </div>
+                            <div class="flex items-center gap-2 px-3 py-1 bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 rounded-full border border-purple-200 dark:border-purple-800">
+                                <div class="w-3 h-3 bg-purple-500 rounded-full"></div> ${t.labels.gifted}
+                            </div>
+                            <div class="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 rounded-full border border-green-200 dark:border-green-800">
+                                <div class="w-3 h-3 bg-green-500 rounded-full"></div> ${t.labels.paternity}
+                            </div>
+                            <div class="flex items-center gap-2 px-3 py-1 bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300 rounded-full border border-teal-200 dark:border-teal-800">
+                                <div class="w-3 h-3 bg-teal-600 rounded-full"></div> ${t.labels.rolled}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            `;
+
+            monthsNames.forEach((monthName, monthIndex) => {
+                const daysInMonth = getDaysInMonth(monthIndex, year);
+                const firstDay = getFirstDayOfMonth(monthIndex, year);
+                
+                let monthHtml = `
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col transition-colors">
+                        <div class="p-3 text-center font-bold uppercase tracking-wider text-sm ${monthIndex === 1 ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400' : 'bg-gray-50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-300'} border-b border-gray-100 dark:border-gray-700">
+                            ${monthName}
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 px-2 pt-2 text-center">
+                            ${daysHeader.map((d, i) => `<div class="text-[10px] font-medium ${i === 0 || i === 6 ? 'text-red-400 dark:text-red-500' : 'text-gray-400 dark:text-gray-500'}">${d}</div>`).join('')}
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 p-2 flex-grow content-start">
+                `;
+
+                // Empty days
+                for (let i = 0; i < firstDay; i++) {
+                    monthHtml += `<div class="h-8"></div>`;
+                }
+
+                // Actual days
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = formatDate(year, monthIndex, day);
+                    const dateObj = new Date(year, monthIndex, day);
+                    const dayOfWeek = dateObj.getDay();
+                    const status = getDayStatus(dateStr, dayOfWeek, t);
+                    
+                    let overlay = '';
+                    if (dateStr === "2026-02-19") overlay = `<div class="absolute -top-1 -right-1 text-green-700 bg-white dark:bg-gray-800 rounded-full p-0.5 border border-green-200 dark:border-green-800"><i data-lucide="baby" style="width: 10px; height: 10px;"></i></div>`;
+                    if (dateStr === "2026-03-24") overlay = `<div class="absolute -top-1 -right-1 text-purple-700 bg-white dark:bg-gray-800 rounded-full p-0.5 border border-purple-200 dark:border-purple-800"><i data-lucide="cake" style="width: 10px; height: 10px;"></i></div>`;
+                    if (dateStr === "2026-06-09") overlay = `<div class="absolute -top-1 -right-1 text-red-500 bg-white dark:bg-gray-800 rounded-full p-0.5 border border-red-200 dark:border-red-800"><i data-lucide="heart" style="width: 10px; height: 10px;"></i></div>`;
+                    if (dateStr === "2026-09-21") overlay = `<div class="absolute -top-1 -right-1 text-orange-600 bg-white dark:bg-gray-800 rounded-full p-0.5 border border-orange-200 dark:border-orange-800"><i data-lucide="party-popper" style="width: 10px; height: 10px;"></i></div>`;
+
+                    const isHighlight = status.type === 'booked' || status.type === 'mandatory' || status.type === 'paternity' || status.type === 'rolled-over';
+                    
+                    monthHtml += `
+                        <div title="${monthName} ${day}: ${status.label}"
+                             class="relative h-8 flex items-center justify-center text-xs rounded-md cursor-default transition-colors ${getStatusColor(status.type)} ${isHighlight ? 'scale-110 shadow-md z-10' : ''}">
+                            ${day}
+                            ${overlay}
+                        </div>
+                    `;
+                }
+
+                monthHtml += `</div>`; // Close days grid
+
+                // Monthly Notes
+                let note = t.notes[monthIndex] || null;
+                let iconName = null;
+                if (monthIndex === 0) iconName = "history";
+                if (monthIndex === 1) iconName = "baby";
+                if (monthIndex === 2) iconName = "cake"; 
+                if (monthIndex === 3) iconName = "sun";
+                if (monthIndex === 4) iconName = "sun";
+                if (monthIndex === 5) iconName = "heart";
+                if (monthIndex === 6) iconName = "plane";
+                if (monthIndex === 7) iconName = "anchor";
+                if (monthIndex === 8) iconName = "party-popper"; 
+                if (monthIndex === 11) iconName = "gift";
+
+                if (note) {
+                    const noteClass = monthIndex === 1 
+                        ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' 
+                        : 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400';
+                    monthHtml += `
+                        <div class="p-2 text-[11px] text-center border-t border-gray-100 dark:border-gray-700 flex items-center justify-center gap-1.5 ${noteClass}">
+                            <i data-lucide="${iconName}" class="w-3 h-3"></i>
+                            ${note}
+                        </div>
+                    `;
+                }
+
+                monthHtml += `</div>`; // Close month card
+                html += monthHtml;
+            });
+
+            html += `</div>`; // Close Main grid
+
+            document.getElementById('app').innerHTML = html;
+            
+            // Re-render icons
+            lucide.createIcons();
+
+            // Attach event listeners
+            document.getElementById('btnLang').addEventListener('click', toggleLang);
+            document.getElementById('btnTheme').addEventListener('click', toggleTheme);
+            document.getElementById('btnPrint').addEventListener('click', handlePrint);
+            document.getElementById('btnShareToggle').addEventListener('click', toggleShareMenu);
+            
+            // Share buttons
+            document.querySelectorAll('.share-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => executeShare(e.currentTarget.dataset.shareType));
+            });
+        };
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('shareDropdown');
+            const toggleBtn = document.getElementById('btnShareToggle');
+            if (isShareOpen && dropdown && toggleBtn && !dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
+                isShareOpen = false;
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Initialize App
+        renderApp();
+    </script>
+</body>
+</html>
