@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 Vacation Master Plan</title>
+    <title>Pedro's Annual Leave - 2026</title>
     
     <!-- Tailwind CSS configuration for Dark Mode -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -53,8 +53,7 @@
         // Dictionaries for i18n
         const dict = {
             en: {
-                title: "2026 Vacation Master Plan",
-                subtitle: "27 Days Annual Leave • All Birthdays Maximized • 0 Buffer",
+                title: "Pedro's Annual Leave - 2026",
                 controls: {
                     lang: "PT-BR",
                     dark: "Dark Mode",
@@ -67,6 +66,7 @@
                     shareEmail: "Email"
                 },
                 labels: {
+                    holiday: "Public Holiday",
                     booked: "Booked (24)",
                     mandatory: "Mandatory (3)",
                     gifted: "Gifted (Free)",
@@ -122,8 +122,7 @@
                 }
             },
             pt: {
-                title: "Plano de Férias 2026",
-                subtitle: "27 Dias de Férias • Aniversários Maximizados • 0 Saldo",
+                title: "Férias Anuais do Pedro - 2026",
                 controls: {
                     lang: "EN-EN",
                     dark: "Modo Escuro",
@@ -136,6 +135,7 @@
                     shareEmail: "E-mail"
                 },
                 labels: {
+                    holiday: "Feriado",
                     booked: "Marcado (24)",
                     mandatory: "Obrigatório (3)",
                     gifted: "Oferecido (Livre)",
@@ -331,10 +331,12 @@
                                 <i data-lucide="calendar" class="w-8 h-8 text-blue-600 dark:text-blue-400"></i>
                                 ${t.title}
                             </h1>
-                            <p class="text-gray-500 dark:text-gray-400 mt-1">${t.subtitle}</p>
                         </div>
                         
                         <div class="flex flex-wrap gap-3 text-sm">
+                            <div class="flex items-center gap-2 px-3 py-1 bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 rounded-full border border-red-200 dark:border-red-800">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div> ${t.labels.holiday}
+                            </div>
                             <div class="flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full border border-blue-200 dark:border-blue-800">
                                 <div class="w-3 h-3 bg-blue-600 dark:bg-blue-500 rounded-full"></div> ${t.labels.booked}
                             </div>
