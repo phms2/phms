@@ -67,25 +67,37 @@
                 },
                 labels: {
                     holiday: "Public Holiday",
-                    booked: "Booked (24)",
+                    booked: "Booked (19)",
                     mandatory: "Mandatory (3)",
                     gifted: "Gifted (Free)",
                     paternity: "Paternity (10)",
-                    rolled: "Rolled Over (2025)"
+                    rolled: "Rolled Over (2025)",
+                    mariana: "Mariana (Team Lead)",
+                    bank: "Available Bank: 5 Days",
+                    workEvent: "Work Event (SBC)",
+                    industryEvent: "Industry Event"
+                },
+                prominentNotes: {
+                    march: "NEXT IO New York (10-11 Mar)",
+                    april: "SBC Summit Malta (28-30 Apr)",
+                    june: "Arraial Clever (days: TBD)",
+                    juneSbc: "SBC Summit Americas (8-10 Jun)",
+                    july: "Summer Party (days: TBD)",
+                    september: "SBC Summit Lisbon (29 Sep - 1 Oct)"
                 },
                 months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
                 daysHeader: ['S','M','T','W','T','F','S'],
                 notes: {
                     0: "Used 2025 Rollover (Jan 2)",
                     1: "Daughter Born Feb 19! (Paternity)",
-                    2: "Return Mar 5 + Bday Run (6 Days)",
+                    2: "Return Mar 5",
                     3: "Easter Break (9 Days)",
                     4: "Worker's Day Bridge (4 Days)",
                     5: "Wife's Bday (4d) + Mnarja (4d)",
                     6: "Friends Visiting (10 Days)",
                     7: "Santa Marija Heat Escape (5 Days)",
                     8: "Son's Bday Extended (4 Days)",
-                    11: "Xmas Shutdown (16 Days!)"
+                    11: "Xmas Shutdown (Mandatory)"
                 },
                 holidays: {
                     "2026-01-01": "New Year's Day",
@@ -117,6 +129,8 @@
                     rolled: "Rolled Over (2025)",
                     booked: "Annual Leave",
                     paternity: "Paternity Leave",
+                    mariana: "Mariana's Vacation",
+                    workEvent: "Work Event (SBC Summit)",
                     weekend: "Weekend",
                     work: "Work Day"
                 }
@@ -136,25 +150,37 @@
                 },
                 labels: {
                     holiday: "Feriado",
-                    booked: "Marcado (24)",
+                    booked: "Marcado (19)",
                     mandatory: "Obrigatório (3)",
                     gifted: "Oferecido (Livre)",
                     paternity: "Paternidade (10)",
-                    rolled: "Acumulado (2025)"
+                    rolled: "Acumulado (2025)",
+                    mariana: "Mariana (Team Lead)",
+                    bank: "Saldo Disponível: 5 Dias",
+                    workEvent: "Evento de Trabalho",
+                    industryEvent: "Evento do Setor"
+                },
+                prominentNotes: {
+                    march: "NEXT IO New York (10-11 Mar)",
+                    april: "SBC Summit Malta (28-30 Abr)",
+                    june: "Arraial Clever (dias a definir)",
+                    juneSbc: "SBC Summit Americas (8-10 Jun)",
+                    july: "Festa de Verão (dias a definir)",
+                    september: "SBC Summit Lisbon (29 Set - 1 Out)"
                 },
                 months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
                 daysHeader: ['D','S','T','Q','Q','S','S'],
                 notes: {
                     0: "Uso do Acumulado 2025 (2 Jan)",
                     1: "Nasc. da Filha! 19 Fev (Paternidade)",
-                    2: "Retorno 5 Mar + Aniversário (6 Dias)",
+                    2: "Retorno 5 Mar",
                     3: "Pausa de Páscoa (9 Dias)",
                     4: "Ponte Dia do Trabalhador (4 Dias)",
                     5: "Aniv. Esposa (4d) + Mnarja (4d)",
                     6: "Visita de Amigos (10 Dias)",
                     7: "Fuga do Calor Santa Marija (5 Dias)",
                     8: "Aniv. do Filho Estendido (4 Dias)",
-                    11: "Recesso de Natal (16 Dias!)"
+                    11: "Recesso de Natal (Obrigatório)"
                 },
                 holidays: {
                     "2026-01-01": "Ano Novo",
@@ -186,6 +212,8 @@
                     rolled: "Acumulado (2025)",
                     booked: "Férias Anuais",
                     paternity: "Licença Paternidade",
+                    mariana: "Férias da Mariana",
+                    workEvent: "Evento de Trabalho (SBC)",
                     weekend: "Fim de Semana",
                     work: "Dia de Trabalho"
                 }
@@ -198,15 +226,35 @@
             "2026-02-19", "2026-02-20", "2026-02-23", "2026-02-24", "2026-02-25", 
             "2026-02-26", "2026-02-27", "2026-03-02", "2026-03-03", "2026-03-04"
         ];
+        
+        // Removed Denied Dates: 20-03-2026, 23-03-2026, 21-12-2026, 22-12-2026, 23-12-2026
         const bookedLeave = [
-            "2026-03-20", "2026-03-23", "2026-03-30", "2026-04-01", "2026-04-02", 
+            "2026-03-30", "2026-04-01", "2026-04-02", 
             "2026-05-04", "2026-06-08", "2026-06-09", "2026-06-30", "2026-07-13", 
             "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-20", 
             "2026-08-12", "2026-08-13", "2026-08-14", "2026-09-07", "2026-09-22", 
-            "2026-12-07", "2026-12-21", "2026-12-22", "2026-12-23", "2026-12-28", 
-            "2026-12-29", "2026-12-30"
+            "2026-12-07", "2026-12-28", "2026-12-29", "2026-12-30"
         ];
         const mandatoryDeducted = ["2026-12-28", "2026-12-29", "2026-12-30"];
+
+        // Mariana's Vacation Days (from screenshot)
+        const marianaLeave = [
+            "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20",
+            "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29",
+            "2026-12-15", "2026-12-16", "2026-12-17", "2026-12-18", "2026-12-19", "2026-12-20", "2026-12-21", "2026-12-22", "2026-12-23"
+        ];
+
+        // Work Events
+        const workEvents = [
+            "2026-04-28", "2026-04-29", "2026-04-30", // SBC Summit Malta
+            "2026-09-29", "2026-09-30", "2026-10-01"  // SBC Summit Lisbon
+        ];
+
+        // Industry Events (Awareness)
+        const industryEvents = [
+            "2026-03-10", "2026-03-11", // NEXT IO New York
+            "2026-06-08", "2026-06-09", "2026-06-10"  // SBC Summit Americas
+        ];
 
         // --- UTILS ---
         const getDaysInMonth = (monthIndex, year) => new Date(year, monthIndex + 1, 0).getDate();
@@ -214,17 +262,25 @@
         const formatDate = (year, month, day) => `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
         const getDayStatus = (dateStr, dayOfWeek, t) => {
+            // Overlays & Specials
             if (dateStr === "2026-03-24") return { type: 'gift', label: t.special.myBday };
             if (dateStr === "2026-06-09") return { type: 'booked', label: t.special.wifeBday };
             if (dateStr === "2026-09-21") return { type: 'holiday', label: t.special.sonBday };
             if (dateStr === "2026-02-19") return { type: 'paternity', label: t.special.daughterBday };
 
+            // Hierarchy of display types
             if (t.holidays[dateStr]) return { type: 'holiday', label: t.holidays[dateStr] };
             if (giftedLeave.includes(dateStr)) return { type: 'gift', label: t.status.gift };
             if (mandatoryDeducted.includes(dateStr)) return { type: 'mandatory', label: t.status.mandatory };
             if (rolledOverLeave.includes(dateStr)) return { type: 'rolled-over', label: t.status.rolled };
             if (bookedLeave.includes(dateStr)) return { type: 'booked', label: t.status.booked };
             if (paternityLeave.includes(dateStr)) return { type: 'paternity', label: t.status.paternity };
+            
+            // Mariana comes after user's own important statuses to prevent hiding personal leave
+            if (marianaLeave.includes(dateStr)) return { type: 'mariana', label: t.status.mariana };
+            
+            if (workEvents.includes(dateStr)) return { type: 'workEvent', label: t.status.workEvent };
+            
             if (dayOfWeek === 0 || dayOfWeek === 6) return { type: 'weekend', label: t.status.weekend };
             return { type: 'work', label: t.status.work };
         };
@@ -236,8 +292,10 @@
                 case 'mandatory': return 'bg-orange-500 text-white font-bold ring-1 ring-orange-300 dark:bg-orange-600 dark:ring-orange-400';
                 case 'rolled-over': return 'bg-teal-600 text-white font-bold ring-1 ring-teal-300 dark:bg-teal-700 dark:ring-teal-400';
                 case 'booked': return 'bg-blue-600 text-white font-bold ring-1 ring-blue-300 dark:bg-blue-700 dark:ring-blue-400';
-                case 'weekend': return 'bg-gray-200 text-gray-400 dark:bg-gray-800 dark:text-gray-500';
                 case 'paternity': return 'bg-green-500 text-white font-bold ring-1 ring-green-300 dark:bg-green-600 dark:ring-green-400';
+                case 'mariana': return 'bg-yellow-300 text-yellow-800 font-bold ring-1 ring-yellow-400 dark:bg-yellow-600 dark:ring-yellow-500 dark:text-yellow-50';
+                case 'workEvent': return 'bg-pink-600 text-white font-bold ring-1 ring-pink-400 dark:bg-pink-700 dark:ring-pink-500';
+                case 'weekend': return 'bg-gray-200 text-gray-400 dark:bg-gray-800 dark:text-gray-500';
                 default: return 'bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-300';
             }
         };
@@ -325,33 +383,49 @@
 
                 <!-- Header Section -->
                 <div class="mb-8">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-blue-600 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-colors">
-                        <div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-blue-600 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 transition-colors">
+                        <div class="flex-1">
                             <h1 class="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
                                 <i data-lucide="calendar" class="w-8 h-8 text-blue-600 dark:text-blue-400"></i>
                                 ${t.title}
                             </h1>
                         </div>
                         
-                        <div class="flex flex-wrap gap-3 text-sm">
-                            <div class="flex items-center gap-2 px-3 py-1 bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 rounded-full border border-red-200 dark:border-red-800">
-                                <div class="w-3 h-3 bg-red-500 rounded-full"></div> ${t.labels.holiday}
-                            </div>
-                            <div class="flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full border border-blue-200 dark:border-blue-800">
-                                <div class="w-3 h-3 bg-blue-600 dark:bg-blue-500 rounded-full"></div> ${t.labels.booked}
-                            </div>
-                            <div class="flex items-center gap-2 px-3 py-1 bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 rounded-full border border-orange-200 dark:border-orange-800">
-                                <div class="w-3 h-3 bg-orange-500 rounded-full"></div> ${t.labels.mandatory}
-                            </div>
-                            <div class="flex items-center gap-2 px-3 py-1 bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 rounded-full border border-purple-200 dark:border-purple-800">
-                                <div class="w-3 h-3 bg-purple-500 rounded-full"></div> ${t.labels.gifted}
-                            </div>
-                            <div class="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 rounded-full border border-green-200 dark:border-green-800">
-                                <div class="w-3 h-3 bg-green-500 rounded-full"></div> ${t.labels.paternity}
-                            </div>
-                            <div class="flex items-center gap-2 px-3 py-1 bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300 rounded-full border border-teal-200 dark:border-teal-800">
-                                <div class="w-3 h-3 bg-teal-600 rounded-full"></div> ${t.labels.rolled}
-                            </div>
+                        <!-- THE BANK UI -->
+                        <div class="flex items-center gap-3 px-5 py-2.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-xl border-2 border-emerald-400 dark:border-emerald-600 shadow-md hover:scale-105 transition transform">
+                            <i data-lucide="piggy-bank" class="w-6 h-6"></i>
+                            <span class="text-lg font-extrabold tracking-wide">${t.labels.bank}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Legends -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 mt-4 flex flex-wrap gap-3 text-sm">
+                        <div class="flex items-center gap-2 px-3 py-1 bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 rounded-full border border-red-200 dark:border-red-800">
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div> ${t.labels.holiday}
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full border border-blue-200 dark:border-blue-800">
+                            <div class="w-3 h-3 bg-blue-600 dark:bg-blue-500 rounded-full"></div> ${t.labels.booked}
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 rounded-full border border-orange-200 dark:border-orange-800">
+                            <div class="w-3 h-3 bg-orange-500 rounded-full"></div> ${t.labels.mandatory}
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 rounded-full border border-purple-200 dark:border-purple-800">
+                            <div class="w-3 h-3 bg-purple-500 rounded-full"></div> ${t.labels.gifted}
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 rounded-full border border-green-200 dark:border-green-800">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div> ${t.labels.paternity}
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300 rounded-full border border-teal-200 dark:border-teal-800">
+                            <div class="w-3 h-3 bg-teal-600 rounded-full"></div> ${t.labels.rolled}
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 rounded-full border border-yellow-200 dark:border-yellow-800">
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div> ${t.labels.mariana}
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-pink-100 dark:bg-pink-900/40 text-pink-800 dark:text-pink-300 rounded-full border border-pink-200 dark:border-pink-800">
+                            <div class="w-3 h-3 bg-pink-500 rounded-full"></div> ${t.labels.workEvent}
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-slate-50 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 rounded-full border border-slate-300 dark:border-slate-600">
+                            <div class="w-3 h-3 bg-transparent border-2 border-dashed border-slate-500 rounded-full"></div> ${t.labels.industryEvent}
                         </div>
                     </div>
                 </div>
@@ -372,8 +446,53 @@
                         <div class="grid grid-cols-7 gap-1 px-2 pt-2 text-center">
                             ${daysHeader.map((d, i) => `<div class="text-[10px] font-medium ${i === 0 || i === 6 ? 'text-red-400 dark:text-red-500' : 'text-gray-400 dark:text-gray-500'}">${d}</div>`).join('')}
                         </div>
-                        <div class="grid grid-cols-7 gap-1 p-2 flex-grow content-start">
                 `;
+
+                // Inject prominent notes for March, April, June, July, September
+                if (monthIndex === 2) {
+                    monthHtml += `
+                        <div class="bg-slate-100 dark:bg-slate-800 border-y-2 border-slate-300 dark:border-slate-600 px-3 py-2.5 mt-2 flex items-center justify-center gap-2 text-slate-800 dark:text-slate-200 shadow-sm relative overflow-hidden">
+                            <i data-lucide="globe" class="w-4 h-4 shrink-0 relative z-10"></i>
+                            <span class="text-[11px] font-bold uppercase tracking-widest relative z-10">${t.prominentNotes.march}</span>
+                        </div>
+                    `;
+                } else if (monthIndex === 3) {
+                    monthHtml += `
+                        <div class="bg-pink-100 dark:bg-pink-900/40 border-y-2 border-pink-300 dark:border-pink-700 px-3 py-2.5 mt-2 flex items-center justify-center gap-2 text-pink-800 dark:text-pink-200 shadow-sm relative overflow-hidden">
+                            <i data-lucide="briefcase" class="w-5 h-5 shrink-0 relative z-10"></i>
+                            <span class="text-[11px] font-bold uppercase tracking-widest relative z-10">${t.prominentNotes.april}</span>
+                        </div>
+                    `;
+                } else if (monthIndex === 5) {
+                    monthHtml += `
+                        <div class="bg-yellow-300 dark:bg-yellow-500 border-y-2 border-yellow-400 dark:border-yellow-600 px-3 py-2 mt-2 flex items-center justify-center gap-2 text-yellow-900 dark:text-yellow-950 shadow-sm relative overflow-hidden">
+                            <div class="absolute inset-0 bg-white opacity-20 dark:opacity-10 animate-pulse"></div>
+                            <i data-lucide="tent-tree" class="w-4 h-4 shrink-0 relative z-10"></i>
+                            <span class="text-[11px] font-black uppercase tracking-widest relative z-10 drop-shadow-sm">${t.prominentNotes.june}</span>
+                        </div>
+                        <div class="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-300 dark:border-slate-600 px-3 py-2 flex items-center justify-center gap-2 text-slate-800 dark:text-slate-200 shadow-sm relative overflow-hidden">
+                            <i data-lucide="globe" class="w-4 h-4 shrink-0 relative z-10"></i>
+                            <span class="text-[11px] font-bold uppercase tracking-widest relative z-10">${t.prominentNotes.juneSbc}</span>
+                        </div>
+                    `;
+                } else if (monthIndex === 6) {
+                    monthHtml += `
+                        <div class="bg-yellow-300 dark:bg-yellow-500 border-y-2 border-yellow-400 dark:border-yellow-600 px-3 py-2.5 mt-2 flex items-center justify-center gap-2 text-yellow-900 dark:text-yellow-950 shadow-sm relative overflow-hidden">
+                            <div class="absolute inset-0 bg-white opacity-20 dark:opacity-10 animate-pulse"></div>
+                            <i data-lucide="sun-medium" class="w-5 h-5 shrink-0 relative z-10"></i>
+                            <span class="text-xs font-black uppercase tracking-widest relative z-10 drop-shadow-sm">${t.prominentNotes.july}</span>
+                        </div>
+                    `;
+                } else if (monthIndex === 8) {
+                    monthHtml += `
+                        <div class="bg-pink-100 dark:bg-pink-900/40 border-y-2 border-pink-300 dark:border-pink-700 px-3 py-2.5 mt-2 flex items-center justify-center gap-2 text-pink-800 dark:text-pink-200 shadow-sm relative overflow-hidden">
+                            <i data-lucide="briefcase" class="w-5 h-5 shrink-0 relative z-10"></i>
+                            <span class="text-[11px] font-bold uppercase tracking-widest relative z-10">${t.prominentNotes.september}</span>
+                        </div>
+                    `;
+                }
+
+                monthHtml += `<div class="grid grid-cols-7 gap-1 p-2 flex-grow content-start">`;
 
                 // Empty days
                 for (let i = 0; i < firstDay; i++) {
@@ -393,11 +512,13 @@
                     if (dateStr === "2026-06-09") overlay = `<div class="absolute -top-1 -right-1 text-red-500 bg-white dark:bg-gray-800 rounded-full p-0.5 border border-red-200 dark:border-red-800"><i data-lucide="heart" style="width: 10px; height: 10px;"></i></div>`;
                     if (dateStr === "2026-09-21") overlay = `<div class="absolute -top-1 -right-1 text-orange-600 bg-white dark:bg-gray-800 rounded-full p-0.5 border border-orange-200 dark:border-orange-800"><i data-lucide="party-popper" style="width: 10px; height: 10px;"></i></div>`;
 
-                    const isHighlight = status.type === 'booked' || status.type === 'mandatory' || status.type === 'paternity' || status.type === 'rolled-over';
+                    const isHighlight = status.type === 'booked' || status.type === 'mandatory' || status.type === 'paternity' || status.type === 'rolled-over' || status.type === 'mariana' || status.type === 'workEvent';
+                    const isIndustryEvent = industryEvents.includes(dateStr);
+                    const dashedClass = isIndustryEvent ? 'border-2 border-dashed border-slate-600 dark:border-slate-400 scale-110 z-10' : '';
                     
                     monthHtml += `
-                        <div title="${monthName} ${day}: ${status.label}"
-                             class="relative h-8 flex items-center justify-center text-xs rounded-md cursor-default transition-colors ${getStatusColor(status.type)} ${isHighlight ? 'scale-110 shadow-md z-10' : ''}">
+                        <div title="${monthName} ${day}: ${status.label}${isIndustryEvent ? ' (' + t.labels.industryEvent + ')' : ''}"
+                             class="relative h-8 flex items-center justify-center text-xs rounded-md cursor-default transition-colors ${getStatusColor(status.type)} ${isHighlight ? 'scale-110 shadow-md z-10' : ''} ${dashedClass}">
                             ${day}
                             ${overlay}
                         </div>
