@@ -1,0 +1,200 @@
+import React, { useState, useEffect } from 'react';
+
+export default function App() {
+  const [packs, setPacks] = useState(1);
+  const [smsText, setSmsText] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  // Tabela base de preços conforme a proporção (1 a 5 pacotes)
+  const basePrices = [0, 12, 23, 33, 50, 57];
+
+  // Lógica de cálculo
+  const calculatePrice = (amount) => {
+    if (amount === 0) return 0;
+    const chunksOf5 = Math.floor(amount / 5);
+    const remainder = amount % 5;
+    return (chunksOf5 * 57) + basePrices[remainder];
+  };
+
+  const price = calculatePrice(packs);
+  const freePacks = Math.floor(packs / 8);
+  const totalPacksDelivered = packs + freePacks;
+  const totalUnits = totalPacksDelivered * 14;
+  const isFreeShipping = packs >= 3;
+
+  // Atualiza o texto do SMS sempre que a quantidade mudar
+  useEffect(() => {
+    if (packs === 0) {
+      setSmsText('');
+      return;
+    }
+
+    let text = `Olá! Aqui está o resumo do seu pedido: 🧀\n\n`;
+    
+    // Mostra se tem pacotes grátis de forma clara
+    if (freePacks > 0) {
+      text += `📦 ${totalPacksDelivered}x Pacotes de Pão de Queijo (${totalUnits} unidades)\n`;
+      text += `🎁 Incluindo ${freePacks} pacote(s) GRÁTIS da promoção!\n`;
+    } else {
+      text += `📦 ${packs}x Pacotes de Pão de Queijo (${totalUnits} unidades)\n`;
+    }
+
+    text += `🚚 Frete: ${isFreeShipping ? 'Grátis' : 'A calcular'}\n`;
+    text += `💰 Total: €${price}\n\n`;
+    text += `Para confirmar o pedido, é só responder esta mensagem!`;
+
+    setSmsText(text);
+  }, [packs, price, freePacks, totalUnits, isFreeShipping, totalPacksDelivered]);
+
+  // Função robusta para copiar para a área de transferência
+  const copyToClipboard = () => {
+    if (!smsText) return;
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(smsText)
+        .then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        })
+        .catch(err => fallbackCopyTextToClipboard(smsText));
+    } else {
+      fallbackCopyTextToClipboard(smsText);
+    }
+  };
+
+  const fallbackCopyTextToClipboard = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Falha ao copiar', err);
+    }
+
+    document.body.removeChild(textArea);
+  };
+
+  return (
+    <div className="min-h-screen bg-orange-50 p-4 md:p-8 font-sans text-gray-800">
+      <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-orange-100">
+        
+        {/* Header */}
+        <div className="bg-orange-500 p-6 text-white text-center">
+          <h1 className="text-2xl font-bold flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+            Calculadora Pão de Queijo
+          </h1>
+          <p className="text-orange-100 text-sm mt-1">Precificação Automática & SMS</p>
+        </div>
+
+        <div className="p-6 space-y-8">
+          
+          {/* Input Section */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-3 text-center">
+              Quantidade de Pacotes Comprados
+            </label>
+            <div className="flex items-center justify-center gap-4">
+              <button 
+                onClick={() => setPacks(Math.max(0, packs - 1))}
+                className="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-2xl font-bold hover:bg-orange-200 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+              >
+                -
+              </button>
+              <input
+                type="number"
+                min="0"
+                value={packs}
+                onChange={(e) => setPacks(Math.max(0, parseInt(e.target.value) || 0))}
+                className="w-24 text-center text-3xl font-bold border-b-2 border-orange-300 focus:border-orange-500 focus:outline-none bg-transparent"
+              />
+              <button 
+                onClick={() => setPacks(packs + 1)}
+                className="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center text-2xl font-bold hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+              >
+                +
+              </button>
+            </div>
+            <p className="text-center text-sm text-gray-500 mt-2">1 pacote = 14 unidades</p>
+        </div>
+
+        {/* Resumo visual rápido */}
+        <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 grid grid-cols-3 gap-4">
+          <div className="text-center">
+            <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Total a Pagar</p>
+            <p className="text-2xl font-bold text-gray-800">€{price}</p>
+          </div>
+          <div className="text-center border-l border-gray-200">
+            <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Frete</p>
+            <p className={`text-lg font-bold mt-1 ${isFreeShipping ? 'text-green-600' : 'text-gray-600'}`}>
+              {isFreeShipping ? 'Grátis' : 'A calcular'}
+            </p>
+          </div>
+          <div className="text-center border-l border-gray-200">
+            <p className="text-xs text-blue-500 uppercase tracking-wide font-semibold" title="Valor por unidade de pão de queijo">P/ Unidade</p>
+            <p className="text-lg font-bold mt-1 text-blue-600">
+              €{totalUnits > 0 ? (price / totalUnits).toFixed(2) : '0.00'}
+            </p>
+          </div>
+          {freePacks > 0 && (
+            <div className="col-span-3 bg-green-100 text-green-800 text-sm font-semibold text-center p-2 rounded-lg flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+              Promoção: Cliente ganhou {freePacks} pacote(s) grátis!
+            </div>
+          )}
+        </div>
+
+        {/* SMS Gerado */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-end">
+              <label className="block text-sm font-semibold text-gray-700">Mensagem Gerada</label>
+              <button
+                onClick={copyToClipboard}
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                  copied 
+                    ? 'bg-green-100 text-green-700' 
+                    : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                }`}
+              >
+                {copied ? (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Copiado!
+                  </>
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copiar
+                  </>
+                )}
+              </button>
+            </div>
+            
+            <textarea
+              readOnly
+              value={smsText}
+              rows={8}
+              className="w-full w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none font-medium"
+            />
+          </div>
+
+          {/* Info Modal / Rules reminder */}
+          <div className="text-xs text-gray-400 text-center space-y-1">
+            <p>14un=12€ | 28un=23€ | 42un=33€ | 56un=50€ | 70un=57€</p>
+            <p>A cada 8 pacotes pagos, leva +1 grátis. Frete grátis a partir de 3.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
