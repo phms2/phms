@@ -1,200 +1,398 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Mineirinha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar para o dropdown */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-orange-50 p-4 md:p-8 font-sans text-gray-800">
 
-export default function App() {
-  const [packs, setPacks] = useState(1);
-  const [smsText, setSmsText] = useState('');
-  const [copied, setCopied] = useState(false);
-
-  // Tabela base de preços conforme a proporção (1 a 5 pacotes)
-  const basePrices = [0, 12, 23, 33, 50, 57];
-
-  // Lógica de cálculo
-  const calculatePrice = (amount) => {
-    if (amount === 0) return 0;
-    const chunksOf5 = Math.floor(amount / 5);
-    const remainder = amount % 5;
-    return (chunksOf5 * 57) + basePrices[remainder];
-  };
-
-  const price = calculatePrice(packs);
-  const freePacks = Math.floor(packs / 8);
-  const totalPacksDelivered = packs + freePacks;
-  const totalUnits = totalPacksDelivered * 14;
-  const isFreeShipping = packs >= 3;
-
-  // Atualiza o texto do SMS sempre que a quantidade mudar
-  useEffect(() => {
-    if (packs === 0) {
-      setSmsText('');
-      return;
-    }
-
-    let text = `Olá! Aqui está o resumo do seu pedido: 🧀\n\n`;
-    
-    // Mostra se tem pacotes grátis de forma clara
-    if (freePacks > 0) {
-      text += `📦 ${totalPacksDelivered}x Pacotes de Pão de Queijo (${totalUnits} unidades)\n`;
-      text += `🎁 Incluindo ${freePacks} pacote(s) GRÁTIS da promoção!\n`;
-    } else {
-      text += `📦 ${packs}x Pacotes de Pão de Queijo (${totalUnits} unidades)\n`;
-    }
-
-    text += `🚚 Frete: ${isFreeShipping ? 'Grátis' : 'A calcular'}\n`;
-    text += `💰 Total: €${price}\n\n`;
-    text += `Para confirmar o pedido, é só responder esta mensagem!`;
-
-    setSmsText(text);
-  }, [packs, price, freePacks, totalUnits, isFreeShipping, totalPacksDelivered]);
-
-  // Função robusta para copiar para a área de transferência
-  const copyToClipboard = () => {
-    if (!smsText) return;
-
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(smsText)
-        .then(() => {
-          setCopied(true);
-          setTimeout(() => setCopied(false), 2000);
-        })
-        .catch(err => fallbackCopyTextToClipboard(smsText));
-    } else {
-      fallbackCopyTextToClipboard(smsText);
-    }
-  };
-
-  const fallbackCopyTextToClipboard = (text) => {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-
-    try {
-      document.execCommand('copy');
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Falha ao copiar', err);
-    }
-
-    document.body.removeChild(textArea);
-  };
-
-  return (
-    <div className="min-h-screen bg-orange-50 p-4 md:p-8 font-sans text-gray-800">
-      <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-orange-100">
+    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-orange-100">
         
-        {/* Header */}
-        <div className="bg-orange-500 p-6 text-white text-center">
-          <h1 className="text-2xl font-bold flex items-center justify-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
-            Calculadora Pão de Queijo
-          </h1>
-          <p className="text-orange-100 text-sm mt-1">Precificação Automática & SMS</p>
+        <!-- Header -->
+        <div class="bg-orange-500 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+                Calculadora Mineirinha
+            </h1>
+            <p class="text-orange-100 text-sm mt-1">Precificação, Frete & SMS Automático</p>
         </div>
 
-        <div className="p-6 space-y-8">
-          
-          {/* Input Section */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3 text-center">
-              Quantidade de Pacotes Comprados
-            </label>
-            <div className="flex items-center justify-center gap-4">
-              <button 
-                onClick={() => setPacks(Math.max(0, packs - 1))}
-                className="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-2xl font-bold hover:bg-orange-200 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-              >
-                -
-              </button>
-              <input
-                type="number"
-                min="0"
-                value={packs}
-                onChange={(e) => setPacks(Math.max(0, parseInt(e.target.value) || 0))}
-                className="w-24 text-center text-3xl font-bold border-b-2 border-orange-300 focus:border-orange-500 focus:outline-none bg-transparent"
-              />
-              <button 
-                onClick={() => setPacks(packs + 1)}
-                className="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center text-2xl font-bold hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-              >
-                +
-              </button>
-            </div>
-            <p className="text-center text-sm text-gray-500 mt-2">1 pacote = 14 unidades</p>
-        </div>
-
-        {/* Resumo visual rápido */}
-        <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Total a Pagar</p>
-            <p className="text-2xl font-bold text-gray-800">€{price}</p>
-          </div>
-          <div className="text-center border-l border-gray-200">
-            <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Frete</p>
-            <p className={`text-lg font-bold mt-1 ${isFreeShipping ? 'text-green-600' : 'text-gray-600'}`}>
-              {isFreeShipping ? 'Grátis' : 'A calcular'}
-            </p>
-          </div>
-          <div className="text-center border-l border-gray-200">
-            <p className="text-xs text-blue-500 uppercase tracking-wide font-semibold" title="Valor por unidade de pão de queijo">P/ Unidade</p>
-            <p className="text-lg font-bold mt-1 text-blue-600">
-              €{totalUnits > 0 ? (price / totalUnits).toFixed(2) : '0.00'}
-            </p>
-          </div>
-          {freePacks > 0 && (
-            <div className="col-span-3 bg-green-100 text-green-800 text-sm font-semibold text-center p-2 rounded-lg flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
-              Promoção: Cliente ganhou {freePacks} pacote(s) grátis!
-            </div>
-          )}
-        </div>
-
-        {/* SMS Gerado */}
-          <div className="space-y-3">
-            <div className="flex justify-between items-end">
-              <label className="block text-sm font-semibold text-gray-700">Mensagem Gerada</label>
-              <button
-                onClick={copyToClipboard}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
-                  copied 
-                    ? 'bg-green-100 text-green-700' 
-                    : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                }`}
-              >
-                {copied ? (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    Copiado!
-                  </>
-                ) : (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    Copiar
-                  </>
-                )}
-              </button>
-            </div>
+        <div class="p-6 space-y-8">
             
-            <textarea
-              readOnly
-              value={smsText}
-              rows={8}
-              className="w-full w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none font-medium"
-            />
-          </div>
+            <!-- Input Quantidade -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-3 text-center">
+                    Quantidade de Pacotes Comprados
+                </label>
+                <div class="flex items-center justify-center gap-4">
+                    <button id="btn-minus" class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-2xl font-bold hover:bg-orange-200 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">-</button>
+                    <input id="packs-input" type="number" min="0" value="1" class="w-24 text-center text-3xl font-bold border-b-2 border-orange-300 focus:border-orange-500 focus:outline-none bg-transparent" />
+                    <button id="btn-plus" class="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center text-2xl font-bold hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">+</button>
+                </div>
+                <p class="text-center text-sm text-gray-500 mt-2">1 pacote = 14 unidades</p>
+            </div>
 
-          {/* Info Modal / Rules reminder */}
-          <div className="text-xs text-gray-400 text-center space-y-1">
-            <p>14un=12€ | 28un=23€ | 42un=33€ | 56un=50€ | 70un=57€</p>
-            <p>A cada 8 pacotes pagos, leva +1 grátis. Frete grátis a partir de 3.</p>
-          </div>
+            <!-- Seleção de Localidade com Busca -->
+            <div class="relative">
+                <label class="block text-sm font-semibold text-gray-700 mb-1">
+                    Localidade de Entrega
+                </label>
+                <div class="relative">
+                    <input id="location-search" type="text" placeholder="Digite para buscar a cidade..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-shadow bg-white text-gray-800" autocomplete="off" />
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                </div>
+                
+                <!-- Dropdown -->
+                <ul id="location-dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
+                    <!-- Preenchido via JS -->
+                </ul>
+                
+                <div id="selected-info" class="hidden mt-2 text-sm text-gray-600 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100">
+                    <svg class="text-blue-500" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    Dia de Entrega: <span id="delivery-day" class="font-bold"></span>
+                </div>
+            </div>
+
+            <!-- Resumo visual rápido -->
+            <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 grid grid-cols-3 gap-4 relative">
+                <div class="text-center">
+                    <p class="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide font-semibold">Produtos</p>
+                    <p id="summary-price" class="text-xl md:text-2xl font-bold text-gray-800">€12.00</p>
+                </div>
+                <div class="text-center border-l border-gray-200">
+                    <p class="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide font-semibold">Frete</p>
+                    <p id="summary-shipping" class="text-lg md:text-xl font-bold mt-1 text-gray-400">---</p>
+                </div>
+                <div class="text-center border-l border-gray-200">
+                    <p class="text-[10px] md:text-xs text-blue-500 uppercase tracking-wide font-semibold" title="Valor por unidade de pão de queijo">P/ Unid.</p>
+                    <p id="summary-unit" class="text-lg md:text-xl font-bold mt-1 text-blue-600">€0.86</p>
+                </div>
+                
+                <!-- Banners Extras -->
+                <div id="promo-banner" class="hidden col-span-3 bg-green-100 text-green-800 text-sm font-semibold text-center p-2 rounded-lg flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path></svg>
+                    Promoção: Cliente ganhou <span id="free-packs-count"></span> pacote(s) grátis!
+                </div>
+                
+                <div class="col-span-3 bg-orange-100 border border-orange-200 text-orange-900 font-bold text-center p-3 rounded-lg flex justify-between items-center">
+                    <span class="uppercase tracking-wide text-xs">Total do Pedido:</span>
+                    <span id="summary-grand-total" class="text-2xl">€12.00</span>
+                </div>
+            </div>
+
+            <!-- SMS Gerado -->
+            <div class="space-y-3">
+                <div class="flex justify-between items-end">
+                    <label class="block text-sm font-semibold text-gray-700">Mensagem para o Cliente</label>
+                    <button id="btn-copy" class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all bg-orange-100 text-orange-700 hover:bg-orange-200">
+                        <span id="copy-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </span>
+                        <span id="copy-text">Copiar</span>
+                    </button>
+                </div>
+                
+                <textarea id="sms-textarea" readonly rows="10" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none font-medium text-sm md:text-base leading-relaxed"></textarea>
+            </div>
+
+            <!-- Regras Rodapé -->
+            <div class="text-xs text-gray-400 text-center space-y-1">
+                <p>14un=12€ | 28un=23€ | 42un=33€ | 56un=50€ | 70un=57€</p>
+                <p>A cada 8 pacotes pagos, leva +1 grátis. Frete grátis a partir de 3 pacotes.</p>
+            </div>
 
         </div>
-      </div>
     </div>
-  );
-}
+
+    <!-- Lógica JavaScript Principal -->
+    <script>
+        // Tabela de Localidades Extraída do PDF
+        // p1: preço 1 pack | p2: preço 2 packs | day: dia de entrega baseado na região
+        const locationsData = [
+            { name: "Attard", p1: 2.00, p2: 2.00, day: "Terça-Feira" },
+            { name: "Balzan", p1: 2.50, p2: 2.00, day: "Terça-Feira" },
+            { name: "Birgu (Vittoriosa)", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
+            { name: "Birkirkara", p1: 3.00, p2: 2.50, day: "Terça-Feira" }, // Adicionado em Terça baseado na geografia próxima
+            { name: "Birzebbuga", p1: 9.00, p2: 7.50, day: "Sexta-Feira" },
+            { name: "Bugibba", p1: 6.00, p2: 5.00, day: "Segunda-Feira" },
+            { name: "Cospicua", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
+            { name: "Dingli", p1: 4.00, p2: 3.50, day: "Terça-Feira" },
+            { name: "Fgura", p1: 6.50, p2: 5.00, day: "Quinta-Feira" },
+            { name: "Floriana", p1: 6.50, p2: 5.00, day: "Quarta-Feira" },
+            { name: "Ghadira", p1: 9.50, p2: 8.00, day: "Segunda-Feira" },
+            { name: "Ghajn Tuffieha", p1: 8.00, p2: 6.50, day: "Segunda-Feira" },
+            { name: "Gharghur", p1: 4.00, p2: 3.50, day: "Terça-Feira" },
+            { name: "Gudja", p1: 5.50, p2: 4.50, day: "Quinta-Feira" },
+            { name: "Gzira", p1: 6.00, p2: 5.00, day: "Quarta-Feira" },
+            { name: "Hamrun", p1: 4.50, p2: 4.00, day: "Quinta-Feira" },
+            { name: "Iklin", p1: 3.50, p2: 3.00, day: "Terça-Feira" },
+            { name: "Isla (Senglea)", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
+            { name: "Kalkara", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
+            { name: "Kirkop", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
+            { name: "Lija", p1: 2.00, p2: 2.00, day: "Terça-Feira" },
+            { name: "Luqa", p1: 4.50, p2: 4.00, day: "Quinta-Feira" },
+            { name: "Marsa", p1: 5.50, p2: 4.50, day: "Quinta-Feira" },
+            { name: "Marsaskala", p1: 8.50, p2: 7.00, day: "Sexta-Feira" },
+            { name: "Marsaxlokk", p1: 10.00, p2: 8.00, day: "Sexta-Feira" },
+            { name: "Mdina", p1: 3.00, p2: 2.50, day: "Terça-Feira" },
+            { name: "Mellieha", p1: 9.00, p2: 7.50, day: "Segunda-Feira" },
+            { name: "Mgarr", p1: 5.00, p2: 4.00, day: "Segunda-Feira" },
+            { name: "Mosta", p1: 0.00, p2: 0.00, day: "Terça-Feira" },
+            { name: "Msida", p1: 5.50, p2: 4.50, day: "Quarta-Feira" },
+            { name: "Mtarfa", p1: 4.00, p2: 3.50, day: "Terça-Feira" },
+            { name: "Naxxar", p1: 1.50, p2: 1.50, day: "Terça-Feira" },
+            { name: "Paola", p1: 6.00, p2: 5.00, day: "Quinta-Feira" },
+            { name: "Pembroke", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
+            { name: "Pieta", p1: 6.00, p2: 5.00, day: "Quarta-Feira" },
+            { name: "Qormi", p1: 3.50, p2: 3.00, day: "Quinta-Feira" },
+            { name: "Qrendi", p1: 8.00, p2: 6.50, day: "Terça-Feira" },
+            { name: "Rabat", p1: 3.50, p2: 3.00, day: "Terça-Feira" },
+            { name: "Safi", p1: 7.50, p2: 6.00, day: "Quinta-Feira" },
+            { name: "San Gwann", p1: 5.50, p2: 4.50, day: "Quarta-Feira" },
+            { name: "Santa Venera", p1: 4.50, p2: 4.00, day: "Quinta-Feira" },
+            { name: "Siggiewi", p1: 5.00, p2: 4.00, day: "Terça-Feira" },
+            { name: "Sliema", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
+            { name: "St. Julian's", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
+            { name: "St. Paul's Bay", p1: 7.00, p2: 6.00, day: "Segunda-Feira" },
+            { name: "Swieqi", p1: 6.50, p2: 5.00, day: "Quarta-Feira" },
+            { name: "Tarxien", p1: 6.50, p2: 5.00, day: "Quinta-Feira" },
+            { name: "Valletta", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
+            { name: "Xghajra", p1: 8.00, p2: 6.50, day: "Sexta-Feira" },
+            { name: "Zabbar", p1: 7.00, p2: 5.50, day: "Quinta-Feira" },
+            { name: "Zebbug", p1: 4.00, p2: 3.50, day: "Terça-Feira" },
+            { name: "Zejtun", p1: 8.50, p2: 7.00, day: "Sexta-Feira" },
+            { name: "Zurrieq", p1: 9.50, p2: 8.00, day: "Sexta-Feira" }
+        ];
+
+        // Variáveis de Estado
+        let packs = 1;
+        let selectedLocation = null;
+        const basePrices = [0, 12, 23, 33, 50, 57]; // 14, 28, 42, 56, 70 unids
+
+        // Elementos DOM
+        const inputPacks = document.getElementById('packs-input');
+        const btnMinus = document.getElementById('btn-minus');
+        const btnPlus = document.getElementById('btn-plus');
+        const searchInput = document.getElementById('location-search');
+        const dropdown = document.getElementById('location-dropdown');
+        const selectedInfo = document.getElementById('selected-info');
+        const deliveryDaySpan = document.getElementById('delivery-day');
+        
+        const sumPrice = document.getElementById('summary-price');
+        const sumShipping = document.getElementById('summary-shipping');
+        const sumUnit = document.getElementById('summary-unit');
+        const sumGrandTotal = document.getElementById('summary-grand-total');
+        const promoBanner = document.getElementById('promo-banner');
+        const freePacksCount = document.getElementById('free-packs-count');
+        
+        const smsTextarea = document.getElementById('sms-textarea');
+        const btnCopy = document.getElementById('btn-copy');
+
+        // ==== LÓGICA DE CÁLCULO ====
+        function calculateProductPrice(amount) {
+            if (amount === 0) return 0;
+            const chunksOf5 = Math.floor(amount / 5);
+            const remainder = amount % 5;
+            return (chunksOf5 * 57) + basePrices[remainder];
+        }
+
+        function calculateShippingCost() {
+            if (packs >= 3 || packs === 0) return 0; // Frete grátis >= 3 pacotes
+            if (!selectedLocation) return null; // Não sabe ainda
+            
+            return packs === 1 ? selectedLocation.p1 : selectedLocation.p2;
+        }
+
+        function updateUI() {
+            // Cálculos básicos
+            const productPrice = calculateProductPrice(packs);
+            const shippingCost = calculateShippingCost();
+            const freePacks = Math.floor(packs / 8);
+            const totalPacksDelivered = packs + freePacks;
+            const totalUnits = totalPacksDelivered * 14;
+            const isFreeShipping = packs >= 3;
+
+            // 1. Atualizar Blocos de Resumo
+            sumPrice.innerText = `€${productPrice.toFixed(2)}`;
+            
+            if (shippingCost !== null) {
+                sumShipping.innerText = isFreeShipping ? 'Grátis' : `€${shippingCost.toFixed(2)}`;
+                sumShipping.className = `text-lg md:text-xl font-bold mt-1 ${isFreeShipping ? 'text-green-600' : 'text-gray-800'}`;
+            } else {
+                sumShipping.innerText = 'Selecione';
+                sumShipping.className = 'text-lg md:text-xl font-bold mt-1 text-gray-400';
+            }
+
+            sumUnit.innerText = totalUnits > 0 ? `€${(productPrice / totalUnits).toFixed(2)}` : '€0.00';
+
+            const grandTotal = productPrice + (shippingCost || 0);
+            sumGrandTotal.innerText = `€${grandTotal.toFixed(2)}`;
+
+            // Promo banner
+            if (freePacks > 0) {
+                promoBanner.classList.remove('hidden');
+                freePacksCount.innerText = freePacks;
+            } else {
+                promoBanner.classList.add('hidden');
+            }
+
+            // 2. Atualizar Mensagem do SMS
+            if (packs === 0) {
+                smsTextarea.value = '';
+                return;
+            }
+
+            let text = `Olá! Aqui está o resumo do seu pedido: 🧀\n\n`;
+            
+            if (freePacks > 0) {
+                text += `📦 ${totalPacksDelivered}x Pacotes de Pão de Queijo (${totalUnits} unidades)\n`;
+                text += `🎁 Incluindo ${freePacks} pacote(s) GRÁTIS da promoção!\n`;
+            } else {
+                text += `📦 ${packs}x Pacotes de Pão de Queijo (${totalUnits} unidades)\n`;
+            }
+
+            if (selectedLocation) {
+                text += `📍 Local: ${selectedLocation.name}\n`;
+                
+                if (isFreeShipping) {
+                    text += `🚚 Frete: Grátis (Entrega à ${selectedLocation.day})\n`;
+                } else {
+                    text += `🚚 Frete: €${shippingCost.toFixed(2)} (Entrega à ${selectedLocation.day})\n`;
+                }
+            } else {
+                text += `📍 Local: A definir\n`;
+                text += `🚚 Frete: ${isFreeShipping ? 'Grátis' : 'A calcular'}\n`;
+            }
+
+            text += `💰 Total do Pedido: €${grandTotal.toFixed(2)}\n\n`;
+            text += `Para confirmar o pedido, é só responder esta mensagem!`;
+
+            smsTextarea.value = text;
+        }
+
+
+        // ==== EVENTOS ====
+
+        // Controles de Quantidade
+        btnMinus.addEventListener('click', () => {
+            if (packs > 0) { packs--; inputPacks.value = packs; updateUI(); }
+        });
+        
+        btnPlus.addEventListener('click', () => {
+            packs++; inputPacks.value = packs; updateUI();
+        });
+
+        inputPacks.addEventListener('change', (e) => {
+            let val = parseInt(e.target.value);
+            packs = isNaN(val) || val < 0 ? 0 : val;
+            inputPacks.value = packs;
+            updateUI();
+        });
+
+        // Dropdown de Localidades
+        function renderDropdown(filterText = '') {
+            dropdown.innerHTML = '';
+            
+            const filtered = locationsData.filter(loc => 
+                loc.name.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                dropdown.innerHTML = '<li class="p-3 text-gray-500 text-sm text-center">Nenhuma localidade encontrada.</li>';
+            } else {
+                filtered.forEach(loc => {
+                    const li = document.createElement('li');
+                    li.className = 'p-3 hover:bg-orange-50 cursor-pointer border-b border-gray-100 last:border-0 text-gray-700 transition-colors';
+                    li.innerText = loc.name;
+                    
+                    li.addEventListener('click', () => {
+                        selectedLocation = loc;
+                        searchInput.value = loc.name;
+                        dropdown.classList.add('hidden');
+                        
+                        selectedInfo.classList.remove('hidden');
+                        deliveryDaySpan.innerText = loc.day;
+                        
+                        updateUI();
+                    });
+                    
+                    dropdown.appendChild(li);
+                });
+            }
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            renderDropdown(e.target.value);
+            dropdown.classList.remove('hidden');
+            
+            // Se o usuário apagar, reseta o local
+            if (e.target.value === '') {
+                selectedLocation = null;
+                selectedInfo.classList.add('hidden');
+                updateUI();
+            }
+        });
+
+        searchInput.addEventListener('focus', () => {
+            renderDropdown(searchInput.value);
+            dropdown.classList.remove('hidden');
+        });
+
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Botão de Copiar
+        btnCopy.addEventListener('click', () => {
+            if (!smsTextarea.value) return;
+
+            navigator.clipboard.writeText(smsTextarea.value).then(() => {
+                const originalIcon = btnCopy.innerHTML;
+                
+                btnCopy.classList.replace('bg-orange-100', 'bg-green-100');
+                btnCopy.classList.replace('text-orange-700', 'text-green-700');
+                btnCopy.classList.remove('hover:bg-orange-200');
+                
+                document.getElementById('copy-text').innerText = 'Copiado!';
+                document.getElementById('copy-icon').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+                setTimeout(() => {
+                    btnCopy.classList.replace('bg-green-100', 'bg-orange-100');
+                    btnCopy.classList.replace('text-green-700', 'text-orange-700');
+                    btnCopy.classList.add('hover:bg-orange-200');
+                    document.getElementById('copy-text').innerText = 'Copiar';
+                    document.getElementById('copy-icon').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                }, 2000);
+            });
+        });
+
+        // Initialize UI
+        updateUI();
+
+    </script>
+</body>
+</html>
