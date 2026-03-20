@@ -31,24 +31,30 @@
         <div class="bg-orange-500 p-6 text-white text-center">
             <h1 class="text-2xl font-bold flex items-center justify-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
-                Calculadora Mineirinha
+                Mineirinha Delivery
             </h1>
-            <p class="text-orange-100 text-sm mt-1">Precificação, Frete & SMS Automático</p>
+            <p class="text-orange-100 text-sm mt-1">Gestor de Pedidos & Orçamentos</p>
         </div>
 
         <!-- TABS NAVEGAÇÃO -->
-        <div class="flex border-b border-orange-200 bg-orange-50/50">
-            <button id="tab-btn-pdq" class="flex-1 py-4 text-center font-bold text-orange-700 bg-white border-t-[3px] border-orange-500 transition-all">
-                🧀 Pão de Queijo
+        <div class="flex border-b border-orange-200 bg-orange-50/50 text-sm md:text-base">
+            <button id="tab-btn-pdq" class="flex-1 py-4 px-1 text-center font-bold text-orange-700 bg-white border-t-[3px] border-orange-500 transition-all">
+                🧀 Pães
             </button>
-            <button id="tab-btn-brig" class="flex-1 py-4 text-center font-bold text-gray-500 hover:text-orange-600 border-t-[3px] border-transparent transition-all">
-                🍫 Brigadeiros
+            <button id="tab-btn-brig" class="flex-1 py-4 px-1 text-center font-bold text-gray-500 hover:text-orange-600 border-t-[3px] border-transparent transition-all">
+                🍫 Doces
+            </button>
+            <button id="tab-btn-cart" class="flex-1 py-4 px-1 text-center font-bold text-gray-500 hover:text-orange-600 border-t-[3px] border-transparent transition-all relative">
+                🛒 Carrinho
+                <span id="cart-badge" class="hidden absolute top-2 right-4 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm">0</span>
             </button>
         </div>
 
-        <div class="p-6 space-y-8">
+        <div class="p-4 md:p-6 space-y-6">
             
-            <!-- ABA 1: PÃO DE QUEIJO -->
+            <!-- ========================================== -->
+            <!-- ABA 1: PÃO DE QUEIJO                       -->
+            <!-- ========================================== -->
             <div id="section-pdq" class="space-y-6 block">
                 <!-- Input Quantidade -->
                 <div>
@@ -56,14 +62,14 @@
                         Quantidade de Pacotes Comprados
                     </label>
                     <div class="flex items-center justify-center gap-4">
-                        <button id="btn-minus" class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-2xl font-bold hover:bg-orange-200 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">-</button>
+                        <button id="btn-minus" class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-2xl font-bold hover:bg-orange-200 transition-colors focus:outline-none">-</button>
                         <input id="packs-input" type="number" min="0" value="1" class="w-24 text-center text-3xl font-bold border-b-2 border-orange-300 focus:border-orange-500 focus:outline-none bg-transparent" />
-                        <button id="btn-plus" class="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center text-2xl font-bold hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">+</button>
+                        <button id="btn-plus" class="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center text-2xl font-bold hover:bg-orange-600 transition-colors focus:outline-none">+</button>
                     </div>
                     <p id="packs-unit-info" class="text-center text-sm text-gray-500 mt-2">1 pacote = 14 unidades</p>
                 </div>
 
-                <!-- Nova Seção: Cartão Fidelidade -->
+                <!-- Cartão Fidelidade -->
                 <div class="bg-green-50/50 p-4 rounded-xl border border-green-100">
                     <div class="flex items-center justify-between">
                         <label class="block text-sm font-semibold text-gray-800 flex items-center gap-2">
@@ -78,7 +84,7 @@
                     <p class="text-xs text-gray-500 mt-1 ml-7">Cliente completou os 8 pedidos (+1 Pack Grátis)</p>
                 </div>
 
-                <!-- Nova Seção: Taxa de Forno (Assado) -->
+                <!-- Taxa de Forno (Assado) -->
                 <div class="bg-orange-50/50 p-4 rounded-xl border border-orange-100">
                     <div class="flex items-center justify-between">
                         <label class="block text-sm font-semibold text-gray-800 flex items-center gap-2">
@@ -92,714 +98,600 @@
                     </div>
 
                     <div id="baked-options" class="hidden mt-4 pt-4 border-t border-orange-200/50 space-y-3">
-                        
-                        <!-- Bloco Forno -->
-                        <div class="bg-white p-3 rounded-lg border border-orange-100 shadow-sm">
-                            <h4 class="text-xs font-bold text-orange-600 mb-2 uppercase tracking-wide flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h20"/><path d="m11.5 21-2-4h5l-2 4"/><path d="M20 14a8 8 0 0 0-16 0"/></svg>
-                                Custos de Forno & Operação
-                            </h4>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-[11px] text-gray-500 mb-1 font-medium">Unid. por Tabuleiro (Fixo)</label>
-                                    <input type="number" id="tray-capacity" value="25" readonly class="w-full px-3 py-2 rounded-md border border-gray-200 focus:outline-none text-sm bg-gray-100 text-gray-500 cursor-not-allowed">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] text-gray-500 mb-1 font-medium" title="Inclui energia, mão de obra, desgaste, etc.">Taxa por Fornada (€)</label>
-                                    <input type="number" id="batch-price" value="3.00" step="0.50" min="0" class="w-full px-3 py-2 rounded-md border border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm bg-white font-semibold text-orange-700">
-                                </div>
+                        <!-- Bloco Forno & Embalagem (Simplificado visualmente para o configurador) -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-white p-2 rounded-lg border border-orange-100">
+                                <label class="block text-[10px] text-gray-500 uppercase font-bold text-orange-600 mb-1">Taxa de Forno (€)</label>
+                                <input type="number" id="batch-price" value="3.00" step="0.50" min="0" class="w-full px-2 py-1 rounded border border-orange-200 focus:outline-none text-sm font-semibold">
+                            </div>
+                            <div class="bg-white p-2 rounded-lg border border-blue-100">
+                                <label class="block text-[10px] text-gray-500 uppercase font-bold text-blue-600 mb-1">Caixa 48un (€)</label>
+                                <input type="number" id="box-price" value="3.50" step="0.50" min="0" class="w-full px-2 py-1 rounded border border-blue-200 focus:outline-none text-sm font-semibold">
                             </div>
                         </div>
-
-                        <!-- Bloco Embalagem -->
-                        <div class="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                            <h4 class="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wide flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                                Embalagens (Caixas)
-                            </h4>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-[11px] text-gray-500 mb-1 font-medium">Unid. por Caixa (Fixo)</label>
-                                    <input type="number" id="box-capacity" value="48" readonly class="w-full px-3 py-2 rounded-md border border-gray-200 focus:outline-none text-sm bg-gray-100 text-gray-500 cursor-not-allowed">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] text-gray-500 mb-1 font-medium">Custo da Caixa (€)</label>
-                                    <input type="number" id="box-price" value="3.50" step="0.50" min="0" class="w-full px-3 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-semibold text-blue-700">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Resumo Interno com Matemática Visível -->
-                        <div class="bg-orange-100 text-orange-900 text-xs p-3 rounded-lg flex flex-col gap-2 font-medium">
-                            <div class="flex justify-between border-b border-orange-200 pb-1 items-start">
-                                <span id="math-batches" class="flex flex-col gap-0.5"><span>0 fornadas x €0.00</span></span>
-                                <span id="math-batches-total" class="font-semibold">€0.00</span>
-                            </div>
-                            <div class="flex justify-between border-b border-orange-200 pb-1 items-start">
-                                <span id="math-boxes" class="flex flex-col gap-0.5"><span>0 caixas x €0.00</span></span>
-                                <span id="math-boxes-total" class="font-semibold">€0.00</span>
-                            </div>
-                            <div class="flex justify-between pt-1 text-sm font-bold text-orange-700">
-                                <span>Taxa Total de Preparo:</span>
-                                <span id="internal-baked-cost">€0.00</span>
-                            </div>
+                        <div class="bg-orange-100 text-orange-900 text-xs p-3 rounded-lg flex justify-between font-medium">
+                            <span>Total Assado & Caixas:</span>
+                            <span id="internal-baked-cost" class="font-bold">€0.00</span>
                         </div>
                     </div>
                 </div>
+
+                <!-- Subtotal Item -->
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase font-semibold">Subtotal Pães</p>
+                        <p id="pdq-subtotal" class="text-2xl font-bold text-gray-800">€12.00</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-blue-500 uppercase font-semibold">P/ Unid.</p>
+                        <p id="pdq-unit-price" class="text-lg font-bold text-blue-600">€0.86</p>
+                    </div>
+                </div>
+
+                <button id="btn-add-pdq" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 md:py-4 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 text-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    Adicionar ao Pedido
+                </button>
             </div>
 
-            <!-- ABA 2: BRIGADEIROS -->
+
+            <!-- ========================================== -->
+            <!-- ABA 2: BRIGADEIROS                         -->
+            <!-- ========================================== -->
             <div id="section-brig" class="space-y-6 hidden">
                 
-                <!-- Input Brigadeiros -->
                 <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
                     <label class="block text-sm font-semibold text-amber-900 mb-3 text-center">
-                        Opções de Encomenda (Tabela)
+                        Opções de Encomenda
                     </label>
-                    
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-                        <select id="brig-tier-select" class="w-full sm:w-2/3 px-4 py-3 rounded-xl border-2 border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white text-gray-800 font-medium appearance-none">
+                        <select id="brig-tier-select" class="w-full sm:w-2/3 px-4 py-3 rounded-xl border-2 border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white text-gray-800 font-medium">
                             <option value="12">12 unidades - €24,00 (€2,00/un)</option>
                             <option value="15">15 unidades - €27,00 (€1,80/un)</option>
                             <option value="20">20 unidades - €35,00 (€1,75/un)</option>
                             <option value="30">30 unidades - €51,00 (€1,70/un)</option>
-                            <option value="50">50 unidades - €65,00 (€1,30/un) - Mais Vantajoso 🎁</option>
+                            <option value="50">50 unidades - €65,00 (€1,30/un) - Mais Vantajoso</option>
                             <option value="60">60 unidades - €75,00 (€1,25/un)</option>
                             <option value="100">100 unidades - €120,00 (€1,20/un)</option>
                         </select>
-                        
                         <div class="flex items-center justify-center gap-2">
-                            <button id="btn-brig-minus" class="w-10 h-10 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-xl font-bold hover:bg-amber-300 transition-colors focus:outline-none">-</button>
+                            <button id="btn-brig-minus" class="w-10 h-10 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-xl font-bold hover:bg-amber-300">-</button>
                             <input id="brig-qty-input" type="number" min="1" value="1" class="w-16 text-center text-xl font-bold border-b-2 border-amber-400 focus:outline-none bg-transparent" />
-                            <button id="btn-brig-plus" class="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center text-xl font-bold hover:bg-amber-600 transition-colors focus:outline-none">+</button>
+                            <button id="btn-brig-plus" class="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center text-xl font-bold hover:bg-amber-600">+</button>
                         </div>
                     </div>
                     <p id="brig-total-units-info" class="text-center text-sm text-amber-700 mt-3 font-semibold">Total: 12 unidades</p>
                 </div>
 
-                <!-- Custo de Embalagem -->
                 <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 shadow-sm">
                     <h4 class="text-sm font-bold text-blue-800 mb-2 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                        Embalagens Especiais (Brigadeiros)
+                        Caixas Especiais (Brigadeiros)
                     </h4>
-                    <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div>
-                            <label class="block text-xs text-blue-600 mb-1 font-medium">Unid. por Caixa (Fixo)</label>
-                            <input type="number" value="48" readonly class="w-full px-3 py-2 rounded-md border border-blue-200 focus:outline-none text-sm bg-blue-100/50 text-blue-600 cursor-not-allowed">
-                        </div>
-                        <div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
                             <label class="block text-xs text-blue-600 mb-1 font-medium">Custo da Caixa (€)</label>
-                            <input type="number" id="brig-box-price" value="3.50" step="0.50" min="0" class="w-full px-3 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-semibold text-blue-700">
+                            <input type="number" id="brig-box-price" value="3.50" step="0.50" min="0" class="w-full px-3 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-semibold">
+                        </div>
+                        <div class="flex-1 text-right">
+                            <span class="block text-xs text-blue-600 font-medium mb-1">Total Embalagem</span>
+                            <span id="brig-boxes-total" class="text-lg font-bold text-blue-800">€0.00</span>
                         </div>
                     </div>
-                    <div class="bg-white text-blue-900 text-xs p-2 rounded-lg flex justify-between font-semibold border border-blue-100">
-                        <span id="brig-math-boxes">0 caixas necessárias</span>
-                        <span id="brig-boxes-total">Total Embalagem: €0.00</span>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase font-semibold">Subtotal Doces</p>
+                        <p id="brig-subtotal" class="text-2xl font-bold text-gray-800">€24.00</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-blue-500 uppercase font-semibold">P/ Unid.</p>
+                        <p id="brig-unit-price" class="text-lg font-bold text-blue-600">€2.00</p>
                     </div>
                 </div>
 
+                <button id="btn-add-brig" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 md:py-4 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 text-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    Adicionar ao Pedido
+                </button>
             </div>
 
-            <!-- SHARED: Seleção de Localidade com Busca -->
-            <div class="relative mt-8 pt-8 border-t border-gray-100">
-                <label class="block text-sm font-semibold text-gray-700 mb-1">
-                    Localidade de Entrega
-                </label>
-                <div class="relative">
-                    <input id="location-search" type="text" placeholder="Digite para buscar a cidade..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-shadow bg-white text-gray-800" autocomplete="off" />
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </div>
-                </div>
+
+            <!-- ========================================== -->
+            <!-- ABA 3: CARRINHO / CHECKOUT                 -->
+            <!-- ========================================== -->
+            <div id="section-cart" class="hidden">
                 
-                <!-- Dropdown -->
-                <ul id="location-dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
+                <!-- Lista de Itens -->
+                <div id="cart-items-list" class="space-y-3 mb-6">
                     <!-- Preenchido via JS -->
-                </ul>
+                </div>
                 
-                <div id="selected-info" class="hidden mt-2 text-sm text-gray-600 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100">
-                    <svg class="text-blue-500" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    Dia de Entrega: <span id="delivery-day" class="font-bold"></span>
+                <div id="cart-empty-msg" class="text-center text-gray-400 py-8 italic border-2 border-dashed border-gray-200 rounded-xl mb-6">
+                    O seu carrinho está vazio.<br/>Adicione produtos nas abas acima.
+                </div>
+
+                <!-- Resumo & Frete (Só visível com itens) -->
+                <div id="cart-checkout-area" class="space-y-6 hidden">
+                    
+                    <div class="relative pt-4 border-t border-gray-200">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">
+                            Localidade de Entrega
+                        </label>
+                        <div class="relative">
+                            <input id="location-search" type="text" placeholder="Digite a cidade..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-shadow bg-white" autocomplete="off" />
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            </div>
+                        </div>
+                        <ul id="location-dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto custom-scrollbar"></ul>
+                        <div id="selected-info" class="hidden mt-2 text-sm text-gray-600 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100">
+                            <svg class="text-blue-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            Entrega à: <span id="delivery-day" class="font-bold"></span>
+                        </div>
+                    </div>
+
+                    <!-- Quadro Final de Valores -->
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm space-y-2">
+                        <div class="flex justify-between text-gray-600 text-sm">
+                            <span>Subtotal Produtos:</span>
+                            <span id="cart-subtotal" class="font-semibold">€0.00</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600 text-sm">
+                            <span>Taxas Extras (Forno/Caixas):</span>
+                            <span id="cart-fees" class="font-semibold">€0.00</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600 text-sm">
+                            <span>Frete de Entrega:</span>
+                            <span id="cart-shipping" class="font-semibold text-gray-400">A Calcular</span>
+                        </div>
+                        
+                        <div id="promo-banner" class="hidden bg-green-100 text-green-800 text-xs font-semibold p-2 rounded-lg flex items-center justify-center gap-2 mt-2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path></svg>
+                            <span id="promo-banner-text">Frete Grátis Aplicado!</span>
+                        </div>
+
+                        <div class="pt-3 mt-3 border-t border-gray-200 flex justify-between items-center">
+                            <span class="uppercase tracking-wide text-xs font-bold text-gray-500">Total a Pagar:</span>
+                            <span id="cart-grand-total" class="text-3xl font-bold text-orange-600">€0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- SMS -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-end">
+                            <label class="block text-sm font-semibold text-gray-700">Mensagem do Pedido</label>
+                            <button id="btn-copy" class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all bg-green-100 text-green-700 hover:bg-green-200">
+                                <span id="copy-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                <span id="copy-text">Copiar Encomenda</span>
+                            </button>
+                        </div>
+                        <textarea id="sms-textarea" readonly rows="12" class="w-full bg-orange-50/50 border border-orange-200 rounded-xl p-4 text-gray-800 focus:outline-none resize-none font-medium text-sm leading-relaxed"></textarea>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- SHARED: Resumo visual rápido -->
-            <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 grid grid-cols-3 gap-4 relative">
-                <div class="text-center">
-                    <p class="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide font-semibold">Produtos</p>
-                    <p id="summary-price" class="text-xl md:text-2xl font-bold text-gray-800">€12.00</p>
-                </div>
-                <div class="text-center border-l border-gray-200">
-                    <p class="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide font-semibold">Frete</p>
-                    <p id="summary-shipping" class="text-lg md:text-xl font-bold mt-1 text-gray-400">---</p>
-                </div>
-                <div class="text-center border-l border-gray-200">
-                    <p class="text-[10px] md:text-xs text-blue-500 uppercase tracking-wide font-semibold" title="Valor por unidade">P/ Unid.</p>
-                    <p id="summary-unit" class="text-lg md:text-xl font-bold mt-1 text-blue-600">€0.86</p>
-                </div>
-                
-                <!-- Banners Extras -->
-                <div id="promo-banner" class="hidden col-span-3 bg-green-100 text-green-800 text-sm font-semibold text-center p-2 rounded-lg flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path></svg>
-                    <span id="promo-banner-text">Promoção: Cliente ganhou pacote(s) grátis!</span>
-                </div>
-                
-                <div id="summary-total-container" class="col-span-3 bg-orange-100 border border-orange-200 text-orange-900 font-bold text-center p-3 rounded-lg flex justify-between items-center transition-colors">
-                    <span class="uppercase tracking-wide text-xs">Total do Pedido:</span>
-                    <span id="summary-grand-total" class="text-2xl">€12.00</span>
-                </div>
-            </div>
-
-            <!-- SHARED: SMS Gerado -->
-            <div class="space-y-3">
-                <div class="flex justify-between items-end">
-                    <label class="block text-sm font-semibold text-gray-700">Mensagem para o Cliente</label>
-                    <button id="btn-copy" class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all bg-orange-100 text-orange-700 hover:bg-orange-200">
-                        <span id="copy-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        </span>
-                        <span id="copy-text">Copiar</span>
-                    </button>
-                </div>
-                
-                <textarea id="sms-textarea" readonly rows="11" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none font-medium text-sm md:text-base leading-relaxed"></textarea>
-            </div>
-
-            <!-- SHARED: Regras Rodapé -->
-            <div id="footer-rules-pdq" class="text-xs text-gray-400 text-center space-y-1 block">
-                <p>14un=12€ | 28un=23€ | 42un=33€ | 56un=50€ | 70un=57€</p>
-                <p>A cada 8 pacotes pagos, leva +1 grátis. Frete grátis a partir de 3 pacotes.</p>
-            </div>
-            <div id="footer-rules-brig" class="text-xs text-gray-400 text-center space-y-1 hidden">
-                <p>Frete grátis incluído a partir de 50 unidades de Brigadeiros.</p>
-                <p>Encomendas devem ser feitas com antecedência.</p>
+            <!-- Regras Rodapé -->
+            <div id="footer-rules" class="text-[11px] text-gray-400 text-center pt-4 border-t border-gray-100">
+                <p><strong>Pães:</strong> 14un=12€ | 28un=23€ | 42un=33€ | 56un=50€ | 70un=57€. Frete grátis >= 3 pacotes.</p>
+                <p><strong>Doces:</strong> Frete grátis >= 50 unidades.</p>
             </div>
 
         </div>
     </div>
 
-    <!-- Lógica JavaScript Principal -->
+    <!-- ========================================== -->
+    <!-- LÓGICA JAVASCRIPT                          -->
+    <!-- ========================================== -->
     <script>
-        // Tabela de Localidades Extraída do PDF
         const locationsData = [
-            { name: "Attard", p1: 2.00, p2: 2.00, day: "Terça-Feira" },
-            { name: "Balzan", p1: 2.50, p2: 2.00, day: "Terça-Feira" },
-            { name: "Birgu (Vittoriosa)", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
-            { name: "Birkirkara", p1: 3.00, p2: 2.50, day: "Terça-Feira" },
-            { name: "Birzebbuga", p1: 9.00, p2: 7.50, day: "Sexta-Feira" },
-            { name: "Bugibba", p1: 6.00, p2: 5.00, day: "Segunda-Feira" },
-            { name: "Cospicua", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
-            { name: "Dingli", p1: 4.00, p2: 3.50, day: "Terça-Feira" },
-            { name: "Fgura", p1: 6.50, p2: 5.00, day: "Quinta-Feira" },
-            { name: "Floriana", p1: 6.50, p2: 5.00, day: "Quarta-Feira" },
-            { name: "Ghadira", p1: 9.50, p2: 8.00, day: "Segunda-Feira" },
-            { name: "Ghajn Tuffieha", p1: 8.00, p2: 6.50, day: "Segunda-Feira" },
-            { name: "Gharghur", p1: 4.00, p2: 3.50, day: "Terça-Feira" },
-            { name: "Gudja", p1: 5.50, p2: 4.50, day: "Quinta-Feira" },
-            { name: "Gzira", p1: 6.00, p2: 5.00, day: "Quarta-Feira" },
-            { name: "Hamrun", p1: 4.50, p2: 4.00, day: "Quinta-Feira" },
-            { name: "Iklin", p1: 3.50, p2: 3.00, day: "Terça-Feira" },
-            { name: "Isla (Senglea)", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
-            { name: "Kalkara", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
-            { name: "Kirkop", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
-            { name: "Lija", p1: 2.00, p2: 2.00, day: "Terça-Feira" },
-            { name: "Luqa", p1: 4.50, p2: 4.00, day: "Quinta-Feira" },
-            { name: "Marsa", p1: 5.50, p2: 4.50, day: "Quinta-Feira" },
-            { name: "Marsaskala", p1: 8.50, p2: 7.00, day: "Sexta-Feira" },
-            { name: "Marsaxlokk", p1: 10.00, p2: 8.00, day: "Sexta-Feira" },
-            { name: "Mdina", p1: 3.00, p2: 2.50, day: "Terça-Feira" },
-            { name: "Mellieha", p1: 9.00, p2: 7.50, day: "Segunda-Feira" },
-            { name: "Mgarr", p1: 5.00, p2: 4.00, day: "Segunda-Feira" },
-            { name: "Mosta", p1: 0.00, p2: 0.00, day: "Terça-Feira" },
-            { name: "Msida", p1: 5.50, p2: 4.50, day: "Quarta-Feira" },
-            { name: "Mtarfa", p1: 4.00, p2: 3.50, day: "Terça-Feira" },
-            { name: "Naxxar", p1: 1.50, p2: 1.50, day: "Terça-Feira" },
-            { name: "Paola", p1: 6.00, p2: 5.00, day: "Quinta-Feira" },
-            { name: "Pembroke", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
-            { name: "Pieta", p1: 6.00, p2: 5.00, day: "Quarta-Feira" },
-            { name: "Qormi", p1: 3.50, p2: 3.00, day: "Quinta-Feira" },
-            { name: "Qrendi", p1: 8.00, p2: 6.50, day: "Terça-Feira" },
-            { name: "Rabat", p1: 3.50, p2: 3.00, day: "Terça-Feira" },
-            { name: "Safi", p1: 7.50, p2: 6.00, day: "Quinta-Feira" },
-            { name: "San Gwann", p1: 5.50, p2: 4.50, day: "Quarta-Feira" },
-            { name: "Santa Venera", p1: 4.50, p2: 4.00, day: "Quinta-Feira" },
-            { name: "Siggiewi", p1: 5.00, p2: 4.00, day: "Terça-Feira" },
-            { name: "Sliema", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
-            { name: "St. Julian's", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
-            { name: "St. Paul's Bay", p1: 7.00, p2: 6.00, day: "Segunda-Feira" },
-            { name: "Swieqi", p1: 6.50, p2: 5.00, day: "Quarta-Feira" },
-            { name: "Tarxien", p1: 6.50, p2: 5.00, day: "Quinta-Feira" },
-            { name: "Valletta", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
-            { name: "Xghajra", p1: 8.00, p2: 6.50, day: "Sexta-Feira" },
-            { name: "Zabbar", p1: 7.00, p2: 5.50, day: "Quinta-Feira" },
-            { name: "Zebbug", p1: 4.00, p2: 3.50, day: "Terça-Feira" },
-            { name: "Zejtun", p1: 8.50, p2: 7.00, day: "Sexta-Feira" },
+            { name: "Attard", p1: 2.00, p2: 2.00, day: "Terça-Feira" }, { name: "Balzan", p1: 2.50, p2: 2.00, day: "Terça-Feira" },
+            { name: "Birgu (Vittoriosa)", p1: 7.00, p2: 6.00, day: "Quinta-Feira" }, { name: "Birkirkara", p1: 3.00, p2: 2.50, day: "Terça-Feira" },
+            { name: "Birzebbuga", p1: 9.00, p2: 7.50, day: "Sexta-Feira" }, { name: "Bugibba", p1: 6.00, p2: 5.00, day: "Segunda-Feira" },
+            { name: "Cospicua", p1: 7.00, p2: 6.00, day: "Quinta-Feira" }, { name: "Dingli", p1: 4.00, p2: 3.50, day: "Terça-Feira" },
+            { name: "Fgura", p1: 6.50, p2: 5.00, day: "Quinta-Feira" }, { name: "Floriana", p1: 6.50, p2: 5.00, day: "Quarta-Feira" },
+            { name: "Ghadira", p1: 9.50, p2: 8.00, day: "Segunda-Feira" }, { name: "Ghajn Tuffieha", p1: 8.00, p2: 6.50, day: "Segunda-Feira" },
+            { name: "Gharghur", p1: 4.00, p2: 3.50, day: "Terça-Feira" }, { name: "Gudja", p1: 5.50, p2: 4.50, day: "Quinta-Feira" },
+            { name: "Gzira", p1: 6.00, p2: 5.00, day: "Quarta-Feira" }, { name: "Hamrun", p1: 4.50, p2: 4.00, day: "Quinta-Feira" },
+            { name: "Iklin", p1: 3.50, p2: 3.00, day: "Terça-Feira" }, { name: "Isla (Senglea)", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
+            { name: "Kalkara", p1: 7.00, p2: 6.00, day: "Quinta-Feira" }, { name: "Kirkop", p1: 7.00, p2: 6.00, day: "Quinta-Feira" },
+            { name: "Lija", p1: 2.00, p2: 2.00, day: "Terça-Feira" }, { name: "Luqa", p1: 4.50, p2: 4.00, day: "Quinta-Feira" },
+            { name: "Marsa", p1: 5.50, p2: 4.50, day: "Quinta-Feira" }, { name: "Marsaskala", p1: 8.50, p2: 7.00, day: "Sexta-Feira" },
+            { name: "Marsaxlokk", p1: 10.00, p2: 8.00, day: "Sexta-Feira" }, { name: "Mdina", p1: 3.00, p2: 2.50, day: "Terça-Feira" },
+            { name: "Mellieha", p1: 9.00, p2: 7.50, day: "Segunda-Feira" }, { name: "Mgarr", p1: 5.00, p2: 4.00, day: "Segunda-Feira" },
+            { name: "Mosta", p1: 0.00, p2: 0.00, day: "Terça-Feira" }, { name: "Msida", p1: 5.50, p2: 4.50, day: "Quarta-Feira" },
+            { name: "Mtarfa", p1: 4.00, p2: 3.50, day: "Terça-Feira" }, { name: "Naxxar", p1: 1.50, p2: 1.50, day: "Terça-Feira" },
+            { name: "Paola", p1: 6.00, p2: 5.00, day: "Quinta-Feira" }, { name: "Pembroke", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
+            { name: "Pieta", p1: 6.00, p2: 5.00, day: "Quarta-Feira" }, { name: "Qormi", p1: 3.50, p2: 3.00, day: "Quinta-Feira" },
+            { name: "Qrendi", p1: 8.00, p2: 6.50, day: "Terça-Feira" }, { name: "Rabat", p1: 3.50, p2: 3.00, day: "Terça-Feira" },
+            { name: "Safi", p1: 7.50, p2: 6.00, day: "Quinta-Feira" }, { name: "San Gwann", p1: 5.50, p2: 4.50, day: "Quarta-Feira" },
+            { name: "Santa Venera", p1: 4.50, p2: 4.00, day: "Quinta-Feira" }, { name: "Siggiewi", p1: 5.00, p2: 4.00, day: "Terça-Feira" },
+            { name: "Sliema", p1: 6.50, p2: 5.50, day: "Quarta-Feira" }, { name: "St. Julian's", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
+            { name: "St. Paul's Bay", p1: 7.00, p2: 6.00, day: "Segunda-Feira" }, { name: "Swieqi", p1: 6.50, p2: 5.00, day: "Quarta-Feira" },
+            { name: "Tarxien", p1: 6.50, p2: 5.00, day: "Quinta-Feira" }, { name: "Valletta", p1: 6.50, p2: 5.50, day: "Quarta-Feira" },
+            { name: "Xghajra", p1: 8.00, p2: 6.50, day: "Sexta-Feira" }, { name: "Zabbar", p1: 7.00, p2: 5.50, day: "Quinta-Feira" },
+            { name: "Zebbug", p1: 4.00, p2: 3.50, day: "Terça-Feira" }, { name: "Zejtun", p1: 8.50, p2: 7.00, day: "Sexta-Feira" },
             { name: "Zurrieq", p1: 9.50, p2: 8.00, day: "Sexta-Feira" }
         ];
 
-        // Preços dos Brigadeiros (Tiers)
         const brigadeiroTiers = {
-            "12": { price: 24.00, obs: "Ideal para presentear ou provar sabores" },
-            "15": { price: 27.00, obs: "Para dividir ou complementar" },
-            "20": { price: 35.00, obs: "Ótimo para pequenos encontros" },
-            "30": { price: 51.00, obs: "Encomenda padrão para festas/famílias" },
-            "50": { price: 65.00, obs: "Mais vantajoso — entrega incluída 🎁" },
-            "60": { price: 75.00, obs: "Combinação ideal doces/salgados" },
-            "100": { price: 120.00, obs: "Eventos maiores ou revenda" }
+            "12": { price: 24.00 }, "15": { price: 27.00 }, "20": { price: 35.00 },
+            "30": { price: 51.00 }, "50": { price: 65.00 }, "60": { price: 75.00 }, "100": { price: 120.00 }
         };
+        const basePricesPdq = [0, 12, 23, 33, 50, 57];
 
-        // Estado Global
-        let activeTab = 'pdq'; // 'pdq' ou 'brig'
+        // Estado do Carrinho Global
+        let cart = [];
         let selectedLocation = null;
 
-        // Estado Pão de Queijo
-        let packs = 1;
-        const basePrices = [0, 12, 23, 33, 50, 57];
-
-        // Estado Brigadeiro
+        // Estado Formulários
+        let pdqPacks = 1;
         let brigQty = 1;
 
-        // TABS DOM Elements
-        const btnTabPdq = document.getElementById('tab-btn-pdq');
-        const btnTabBrig = document.getElementById('tab-btn-brig');
-        const sectionPdq = document.getElementById('section-pdq');
-        const sectionBrig = document.getElementById('section-brig');
-        const footerPdq = document.getElementById('footer-rules-pdq');
-        const footerBrig = document.getElementById('footer-rules-brig');
-        const summaryTotalContainer = document.getElementById('summary-total-container');
+        // TABS DOM
+        const tabBtns = {
+            pdq: document.getElementById('tab-btn-pdq'),
+            brig: document.getElementById('tab-btn-brig'),
+            cart: document.getElementById('tab-btn-cart')
+        };
+        const sections = {
+            pdq: document.getElementById('section-pdq'),
+            brig: document.getElementById('section-brig'),
+            cart: document.getElementById('section-cart')
+        };
+        const cartBadge = document.getElementById('cart-badge');
 
-        // Pão de Queijo DOM Elements
-        const inputPacks = document.getElementById('packs-input');
-        const btnMinus = document.getElementById('btn-minus');
-        const btnPlus = document.getElementById('btn-plus');
-        const packsUnitInfo = document.getElementById('packs-unit-info');
-        const toggleLoyalty = document.getElementById('toggle-loyalty');
-        const toggleBaked = document.getElementById('toggle-baked');
-        const bakedOptions = document.getElementById('baked-options');
-        const inputTrayCapacity = document.getElementById('tray-capacity');
-        const inputBatchPrice = document.getElementById('batch-price');
-        const inputBoxCapacity = document.getElementById('box-capacity');
-        const inputBoxPrice = document.getElementById('box-price');
-        const mathBatches = document.getElementById('math-batches');
-        const mathBatchesTotal = document.getElementById('math-batches-total');
-        const mathBoxes = document.getElementById('math-boxes');
-        const mathBoxesTotal = document.getElementById('math-boxes-total');
-        const internalBakedCost = document.getElementById('internal-baked-cost');
+        // ==== NAVEGAÇÃO ENTRE ABAS ====
+        function switchTab(tabId) {
+            Object.keys(sections).forEach(key => {
+                if(key === tabId) {
+                    sections[key].classList.remove('hidden');
+                    sections[key].classList.add('block');
+                    tabBtns[key].classList.add('bg-white', 'text-gray-800');
+                    tabBtns[key].classList.replace('border-transparent', tabId === 'pdq' ? 'border-orange-500' : (tabId === 'brig' ? 'border-amber-500' : 'border-green-500'));
+                    tabBtns[key].classList.remove('text-gray-500');
+                } else {
+                    sections[key].classList.remove('block');
+                    sections[key].classList.add('hidden');
+                    tabBtns[key].classList.remove('bg-white', 'text-gray-800');
+                    tabBtns[key].classList.add('text-gray-500');
+                    tabBtns[key].classList.replace('border-orange-500', 'border-transparent');
+                    tabBtns[key].classList.replace('border-amber-500', 'border-transparent');
+                    tabBtns[key].classList.replace('border-green-500', 'border-transparent');
+                }
+            });
+            if(tabId === 'cart') updateCartUI();
+        }
 
-        // Brigadeiro DOM Elements
-        const brigTierSelect = document.getElementById('brig-tier-select');
-        const brigQtyInput = document.getElementById('brig-qty-input');
-        const btnBrigMinus = document.getElementById('btn-brig-minus');
-        const btnBrigPlus = document.getElementById('btn-brig-plus');
-        const brigTotalUnitsInfo = document.getElementById('brig-total-units-info');
-        const brigBoxPriceInput = document.getElementById('brig-box-price');
-        const brigMathBoxes = document.getElementById('brig-math-boxes');
-        const brigBoxesTotal = document.getElementById('brig-boxes-total');
+        tabBtns.pdq.addEventListener('click', () => switchTab('pdq'));
+        tabBtns.brig.addEventListener('click', () => switchTab('brig'));
+        tabBtns.cart.addEventListener('click', () => switchTab('cart'));
 
-        // Shared DOM Elements
+        // ==== LÓGICA PDQ FORMULARIO ====
+        function updatePdqForm() {
+            let productPrice = pdqPacks === 0 ? 0 : (Math.floor(pdqPacks / 5) * 57) + basePricesPdq[pdqPacks % 5];
+            const promoFree = Math.floor(pdqPacks / 8);
+            const loyaltyFree = document.getElementById('toggle-loyalty').checked ? 1 : 0;
+            const totalUnits = (pdqPacks + promoFree + loyaltyFree) * 14;
+
+            document.getElementById('packs-unit-info').innerText = pdqPacks === 1 ? `1 pacote = 14 unidades` : `${pdqPacks} pacotes = ${pdqPacks * 14} unidades`;
+
+            let isBaked = document.getElementById('toggle-baked').checked;
+            let batchCost = parseFloat(document.getElementById('batch-price').value) || 0;
+            let boxCost = parseFloat(document.getElementById('box-price').value) || 0;
+            let fee = 0;
+
+            if (isBaked && totalUnits > 0) {
+                let b = Math.ceil(totalUnits / 25);
+                let cx = Math.ceil(totalUnits / 48);
+                fee = (b * batchCost) + (cx * boxCost);
+            }
+            
+            document.getElementById('internal-baked-cost').innerText = `€${fee.toFixed(2)}`;
+            document.getElementById('pdq-subtotal').innerText = `€${(productPrice + fee).toFixed(2)}`;
+            document.getElementById('pdq-unit-price').innerText = totalUnits > 0 ? `€${(productPrice / totalUnits).toFixed(2)}` : '€0.00';
+        }
+
+        document.getElementById('btn-minus').addEventListener('click', () => { if (pdqPacks > 0) { pdqPacks--; document.getElementById('packs-input').value = pdqPacks; updatePdqForm(); }});
+        document.getElementById('btn-plus').addEventListener('click', () => { pdqPacks++; document.getElementById('packs-input').value = pdqPacks; updatePdqForm(); });
+        document.getElementById('packs-input').addEventListener('change', (e) => { pdqPacks = Math.max(0, parseInt(e.target.value) || 0); e.target.value = pdqPacks; updatePdqForm(); });
+        document.getElementById('toggle-loyalty').addEventListener('change', updatePdqForm);
+        document.getElementById('toggle-baked').addEventListener('change', (e) => {
+            document.getElementById('baked-options').style.display = e.target.checked ? 'block' : 'none';
+            updatePdqForm();
+        });
+        document.getElementById('batch-price').addEventListener('input', updatePdqForm);
+        document.getElementById('box-price').addEventListener('input', updatePdqForm);
+
+        // ==== LÓGICA BRIG FORMULARIO ====
+        function updateBrigForm() {
+            let tier = document.getElementById('brig-tier-select').value;
+            let units = parseInt(tier) * brigQty;
+            let price = brigadeiroTiers[tier].price * brigQty;
+            
+            document.getElementById('brig-total-units-info').innerText = `Total: ${units} unidades`;
+            
+            let boxCost = parseFloat(document.getElementById('brig-box-price').value) || 0;
+            let fee = Math.ceil(units / 48) * boxCost;
+            
+            document.getElementById('brig-boxes-total').innerText = `€${fee.toFixed(2)}`;
+            document.getElementById('brig-subtotal').innerText = `€${(price + fee).toFixed(2)}`;
+            document.getElementById('brig-unit-price').innerText = `€${(price / units).toFixed(2)}`;
+        }
+
+        document.getElementById('brig-tier-select').addEventListener('change', updateBrigForm);
+        document.getElementById('btn-brig-minus').addEventListener('click', () => { if (brigQty > 1) { brigQty--; document.getElementById('brig-qty-input').value = brigQty; updateBrigForm(); }});
+        document.getElementById('btn-brig-plus').addEventListener('click', () => { brigQty++; document.getElementById('brig-qty-input').value = brigQty; updateBrigForm(); });
+        document.getElementById('brig-qty-input').addEventListener('change', (e) => { brigQty = Math.max(1, parseInt(e.target.value) || 1); e.target.value = brigQty; updateBrigForm(); });
+        document.getElementById('brig-box-price').addEventListener('input', updateBrigForm);
+
+        // ==== ADICIONAR AO CARRINHO ====
+        function showBtnFeedback(btnId) {
+            const btn = document.getElementById(btnId);
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `Adicionado! ✔️`;
+            btn.classList.replace('bg-orange-500', 'bg-green-500');
+            btn.classList.replace('bg-amber-500', 'bg-green-500');
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                if(btnId === 'btn-add-pdq') btn.classList.replace('bg-green-500', 'bg-orange-500');
+                if(btnId === 'btn-add-brig') btn.classList.replace('bg-green-500', 'bg-amber-500');
+            }, 1500);
+        }
+
+        document.getElementById('btn-add-pdq').addEventListener('click', () => {
+            const loyalty = document.getElementById('toggle-loyalty').checked;
+            if (pdqPacks === 0 && !loyalty) return;
+
+            let productPrice = pdqPacks === 0 ? 0 : (Math.floor(pdqPacks / 5) * 57) + basePricesPdq[pdqPacks % 5];
+            const promoFree = Math.floor(pdqPacks / 8);
+            const loyaltyFree = loyalty ? 1 : 0;
+            const totalFree = promoFree + loyaltyFree;
+            const totalUnits = (pdqPacks + totalFree) * 14;
+
+            let isBaked = document.getElementById('toggle-baked').checked;
+            let fee = 0;
+            let b = 0, cx = 0;
+            if (isBaked && totalUnits > 0) {
+                b = Math.ceil(totalUnits / 25);
+                cx = Math.ceil(totalUnits / 48);
+                fee = (b * (parseFloat(document.getElementById('batch-price').value)||0)) + (cx * (parseFloat(document.getElementById('box-price').value)||0));
+            }
+
+            let sms = [];
+            if(totalFree > 0) {
+                sms.push(`📦 ${pdqPacks + totalFree}x Pacotes (${totalUnits} un)`);
+                let freeMsg = promoFree > 0 && loyaltyFree > 0 ? '(Promoção + Fidelidade)' : (loyaltyFree > 0 ? 'Fidelidade' : 'Promoção');
+                sms.push(`🎁 Bónus: ${totalFree} pacote(s) GRÁTIS - ${freeMsg}!`);
+            } else {
+                sms.push(`📦 ${pdqPacks}x Pacotes (${totalUnits} un)`);
+            }
+            if(isBaked) sms.push(`🔥 Taxa de Preparo: €${fee.toFixed(2)}`);
+
+            cart.push({
+                id: Date.now(),
+                type: 'pdq',
+                icon: '🧀',
+                title: 'Pão de Queijo',
+                price: productPrice,
+                fee: fee,
+                packs: pdqPacks,
+                units: totalUnits,
+                desc: `${pdqPacks} pacotes pagos + ${totalFree} grátis`,
+                sms: sms
+            });
+
+            updateCartBadge();
+            showBtnFeedback('btn-add-pdq');
+            
+            // Opcional: Reset form after adding
+            pdqPacks = 1; document.getElementById('packs-input').value = 1; 
+            document.getElementById('toggle-loyalty').checked = false;
+            updatePdqForm();
+        });
+
+        document.getElementById('btn-add-brig').addEventListener('click', () => {
+            let tier = document.getElementById('brig-tier-select').value;
+            let units = parseInt(tier) * brigQty;
+            let price = brigadeiroTiers[tier].price * brigQty;
+            
+            let cx = Math.ceil(units / 48);
+            let fee = cx * (parseFloat(document.getElementById('brig-box-price').value) || 0);
+
+            let sms = [];
+            sms.push(`📦 ${brigQty}x Lote(s) de ${tier}un (Total: ${units} un)`);
+            if(fee > 0) sms.push(`🎀 Embalagem Especial: €${fee.toFixed(2)}`);
+
+            cart.push({
+                id: Date.now(),
+                type: 'brig',
+                icon: '🍫',
+                title: 'Brigadeiros Gourmet',
+                price: price,
+                fee: fee,
+                units: units,
+                desc: `${brigQty} lote(s) de ${tier} un`,
+                sms: sms
+            });
+
+            updateCartBadge();
+            showBtnFeedback('btn-add-brig');
+            
+            brigQty = 1; document.getElementById('brig-qty-input').value = 1;
+            updateBrigForm();
+        });
+
+        // ==== GESTÃO DO CARRINHO ====
+        function updateCartBadge() {
+            cartBadge.innerText = cart.length;
+            if(cart.length > 0) cartBadge.classList.remove('hidden');
+            else cartBadge.classList.add('hidden');
+        }
+
+        window.removeCartItem = function(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartBadge();
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const listDiv = document.getElementById('cart-items-list');
+            const emptyMsg = document.getElementById('cart-empty-msg');
+            const checkoutArea = document.getElementById('cart-checkout-area');
+
+            listDiv.innerHTML = '';
+            
+            if(cart.length === 0) {
+                emptyMsg.style.display = 'block';
+                checkoutArea.style.display = 'none';
+                return;
+            }
+
+            emptyMsg.style.display = 'none';
+            checkoutArea.style.display = 'block';
+
+            let sumProducts = 0;
+            let sumFees = 0;
+            let totalPdqPacks = 0;
+            let totalBrigUnits = 0;
+
+            cart.forEach(item => {
+                sumProducts += item.price;
+                sumFees += item.fee;
+                if(item.type === 'pdq') totalPdqPacks += item.packs;
+                if(item.type === 'brig') totalBrigUnits += item.units;
+
+                listDiv.innerHTML += `
+                    <div class="flex justify-between items-center p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">${item.icon} ${item.title}</p>
+                            <p class="text-xs text-gray-500">${item.desc}</p>
+                            ${item.fee > 0 ? `<p class="text-[10px] text-orange-500 mt-0.5">+ €${item.fee.toFixed(2)} taxas</p>` : ''}
+                        </div>
+                        <div class="text-right flex flex-col items-end">
+                            <p class="font-bold text-gray-800">€${(item.price + item.fee).toFixed(2)}</p>
+                            <button onclick="removeCartItem(${item.id})" class="text-[10px] text-red-500 hover:text-red-700 underline mt-1">Remover</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Lógica de Frete Combinado
+            const isFreeShipping = totalPdqPacks >= 3 || totalBrigUnits >= 50;
+            let shippingCost = 0;
+
+            if (!isFreeShipping && selectedLocation) {
+                // Se só tiver 1 pacote de pdq e mais nada, tarifa 1. Qualquer outra combinação ou quantidade, tarifa 2.
+                let totalDistinctLots = totalPdqPacks + cart.filter(i=>i.type==='brig').length;
+                shippingCost = totalDistinctLots === 1 ? selectedLocation.p1 : selectedLocation.p2;
+            }
+
+            // Atualiza Visuais do Carrinho
+            document.getElementById('cart-subtotal').innerText = `€${sumProducts.toFixed(2)}`;
+            document.getElementById('cart-fees').innerText = `€${sumFees.toFixed(2)}`;
+            
+            if (isFreeShipping) {
+                document.getElementById('promo-banner').classList.remove('hidden');
+                document.getElementById('promo-banner').classList.add('flex');
+                document.getElementById('cart-shipping').innerText = 'Grátis';
+                document.getElementById('cart-shipping').className = 'font-semibold text-green-600';
+            } else {
+                document.getElementById('promo-banner').classList.add('hidden');
+                document.getElementById('promo-banner').classList.remove('flex');
+                if (selectedLocation) {
+                    document.getElementById('cart-shipping').innerText = `€${shippingCost.toFixed(2)}`;
+                    document.getElementById('cart-shipping').className = 'font-semibold text-gray-800';
+                } else {
+                    document.getElementById('cart-shipping').innerText = 'Selecione Local';
+                    document.getElementById('cart-shipping').className = 'font-semibold text-gray-400';
+                }
+            }
+
+            const grandTotal = sumProducts + sumFees + (isFreeShipping ? 0 : shippingCost);
+            document.getElementById('cart-grand-total').innerText = `€${grandTotal.toFixed(2)}`;
+
+            generateSMS(sumProducts, sumFees, shippingCost, grandTotal, isFreeShipping);
+        }
+
+        function generateSMS(sumProd, sumFees, shipCost, total, isFree) {
+            let text = `Olá! Aqui está o resumo do seu pedido: 🛍️\n\n`;
+
+            cart.forEach(item => {
+                text += `${item.icon} ${item.title.toUpperCase()}:\n`;
+                item.sms.forEach(line => text += `${line}\n`);
+                text += `\n`;
+            });
+
+            if (selectedLocation) {
+                text += `📍 Local de Entrega: ${selectedLocation.name}\n`;
+                if (isFree) {
+                    text += `🚚 Frete: Grátis (Entrega à ${selectedLocation.day})\n`;
+                } else {
+                    text += `🚚 Frete: €${shipCost.toFixed(2)} (Entrega à ${selectedLocation.day})\n`;
+                }
+            } else {
+                text += `📍 Local de Entrega: A definir\n`;
+                text += `🚚 Frete: ${isFree ? 'Grátis' : 'A calcular'}\n`;
+            }
+
+            text += `\n💰 TOTAL DO PEDIDO: €${total.toFixed(2)}\n\n`;
+            text += `Para confirmar a encomenda, é só responder esta mensagem!`;
+
+            document.getElementById('sms-textarea').value = text;
+        }
+
+        // ==== LOCALIDADE DROPDOWN ====
         const searchInput = document.getElementById('location-search');
         const dropdown = document.getElementById('location-dropdown');
         const selectedInfo = document.getElementById('selected-info');
-        const deliveryDaySpan = document.getElementById('delivery-day');
-        const sumPrice = document.getElementById('summary-price');
-        const sumShipping = document.getElementById('summary-shipping');
-        const sumUnit = document.getElementById('summary-unit');
-        const sumGrandTotal = document.getElementById('summary-grand-total');
-        const promoBanner = document.getElementById('promo-banner');
-        const promoBannerText = document.getElementById('promo-banner-text');
-        const smsTextarea = document.getElementById('sms-textarea');
-        const btnCopy = document.getElementById('btn-copy');
-
-        // ==== NAVEGAÇÃO ENTRE ABAS ====
-        btnTabPdq.addEventListener('click', () => {
-            activeTab = 'pdq';
-            
-            // Stylings
-            btnTabPdq.className = "flex-1 py-4 text-center font-bold text-orange-700 bg-white border-t-[3px] border-orange-500 transition-all";
-            btnTabBrig.className = "flex-1 py-4 text-center font-bold text-gray-500 hover:text-amber-600 border-t-[3px] border-transparent transition-all";
-            summaryTotalContainer.className = "col-span-3 bg-orange-100 border border-orange-200 text-orange-900 font-bold text-center p-3 rounded-lg flex justify-between items-center transition-colors";
-            
-            // Visibility
-            sectionPdq.classList.remove('hidden');
-            sectionPdq.classList.add('block');
-            sectionBrig.classList.remove('block');
-            sectionBrig.classList.add('hidden');
-            
-            footerPdq.classList.remove('hidden');
-            footerPdq.classList.add('block');
-            footerBrig.classList.remove('block');
-            footerBrig.classList.add('hidden');
-
-            updateUI();
-        });
-
-        btnTabBrig.addEventListener('click', () => {
-            activeTab = 'brig';
-            
-            // Stylings
-            btnTabBrig.className = "flex-1 py-4 text-center font-bold text-amber-700 bg-white border-t-[3px] border-amber-500 transition-all";
-            btnTabPdq.className = "flex-1 py-4 text-center font-bold text-gray-500 hover:text-orange-600 border-t-[3px] border-transparent transition-all";
-            summaryTotalContainer.className = "col-span-3 bg-amber-100 border border-amber-200 text-amber-900 font-bold text-center p-3 rounded-lg flex justify-between items-center transition-colors";
-            
-            // Visibility
-            sectionBrig.classList.remove('hidden');
-            sectionBrig.classList.add('block');
-            sectionPdq.classList.remove('block');
-            sectionPdq.classList.add('hidden');
-            
-            footerBrig.classList.remove('hidden');
-            footerBrig.classList.add('block');
-            footerPdq.classList.remove('block');
-            footerPdq.classList.add('hidden');
-
-            updateUI();
-        });
-
-        // ==== LÓGICA DE CÁLCULO GERAL ====
-        function calculatePdqPrice(amount) {
-            if (amount === 0) return 0;
-            const chunksOf5 = Math.floor(amount / 5);
-            const remainder = amount % 5;
-            return (chunksOf5 * 57) + basePrices[remainder];
-        }
-
-        function calculateShippingCost(isFree) {
-            if (isFree) return 0;
-            if (!selectedLocation) return null;
-            
-            // Lógica de frete: 
-            // Para Pão de queijo: se packs === 1 usa p1, senão usa p2 (já que packs >=3 é grátis)
-            // Para Brigadeiros: se for 1 lote pede p1, 2+ lotes pede p2 (assumindo que seja abaixo de 50 un. de qq forma)
-            if (activeTab === 'pdq') {
-                return packs === 1 ? selectedLocation.p1 : selectedLocation.p2;
-            } else {
-                return brigQty === 1 ? selectedLocation.p1 : selectedLocation.p2;
-            }
-        }
-
-        function updateUI() {
-            if (activeTab === 'pdq') {
-                updatePdqUI();
-            } else {
-                updateBrigUI();
-            }
-        }
-
-        // ==== UPDATE UI: PÃO DE QUEIJO ====
-        function updatePdqUI() {
-            const productPrice = calculatePdqPrice(packs);
-            
-            const promoFreePacks = Math.floor(packs / 8);
-            const loyaltyPacks = toggleLoyalty.checked ? 1 : 0;
-            const totalFreePacks = promoFreePacks + loyaltyPacks;
-            
-            const totalPacksDelivered = packs + totalFreePacks;
-            const totalUnits = totalPacksDelivered * 14;
-            const isFreeShipping = packs >= 3;
-            const shippingCost = calculateShippingCost(isFreeShipping);
-
-            if (packs === 0) {
-                packsUnitInfo.innerText = `0 pacotes = 0 unidades`;
-            } else if (packs === 1) {
-                packsUnitInfo.innerText = `1 pacote = 14 unidades`;
-            } else {
-                packsUnitInfo.innerText = `${packs} pacotes = ${packs * 14} unidades`;
-            }
-
-            let isBaked = toggleBaked.checked;
-            let trayCap = 25; 
-            let batchCost = parseFloat(inputBatchPrice.value) || 3.00;
-            let boxCap = 48; 
-            let boxCost = parseFloat(inputBoxPrice.value) || 0;
-
-            let totalBatches = 0;
-            let totalBoxes = 0;
-            let totalBakedFee = 0;
-
-            if (isBaked && totalUnits > 0) {
-                totalBatches = Math.ceil(totalUnits / trayCap);
-                totalBoxes = Math.ceil(totalUnits / boxCap);
-                totalBakedFee = (totalBatches * batchCost) + (totalBoxes * boxCost);
-                
-                mathBatches.innerHTML = `<span>${totalBatches} fornada(s) x €${batchCost.toFixed(2)}</span>`;
-                mathBoxes.innerHTML = `<span>${totalBoxes} caixa(s) x €${boxCost.toFixed(2)}</span>`;
-                mathBatchesTotal.innerText = `€${(totalBatches * batchCost).toFixed(2)}`;
-                mathBoxesTotal.innerText = `€${(totalBoxes * boxCost).toFixed(2)}`;
-                internalBakedCost.innerText = `€${totalBakedFee.toFixed(2)}`;
-            } else {
-                mathBatches.innerHTML = `<span>0 fornadas x €0.00</span>`;
-                mathBatchesTotal.innerText = `€0.00`;
-                mathBoxes.innerHTML = `<span>0 caixas x €0.00</span>`;
-                mathBoxesTotal.innerText = `€0.00`;
-                internalBakedCost.innerText = `€0.00`;
-            }
-
-            sumPrice.innerText = `€${productPrice.toFixed(2)}`;
-            
-            if (shippingCost !== null) {
-                sumShipping.innerText = isFreeShipping ? 'Grátis' : `€${shippingCost.toFixed(2)}`;
-                sumShipping.className = `text-lg md:text-xl font-bold mt-1 ${isFreeShipping ? 'text-green-600' : 'text-gray-800'}`;
-            } else {
-                sumShipping.innerText = 'Selecione';
-                sumShipping.className = 'text-lg md:text-xl font-bold mt-1 text-gray-400';
-            }
-
-            sumUnit.innerText = totalUnits > 0 ? `€${(productPrice / totalUnits).toFixed(2)}` : '€0.00';
-
-            const grandTotal = productPrice + (shippingCost || 0) + totalBakedFee;
-            sumGrandTotal.innerText = `€${grandTotal.toFixed(2)}`;
-
-            if (totalFreePacks > 0) {
-                promoBanner.classList.remove('hidden');
-                promoBannerText.innerText = `Promoção: Cliente ganhou ${totalFreePacks} pacote(s) grátis!`;
-            } else {
-                promoBanner.classList.add('hidden');
-            }
-
-            if (packs === 0 && !toggleLoyalty.checked) {
-                smsTextarea.value = '';
-                return;
-            }
-
-            let text = `Olá! Aqui está o resumo do seu pedido: 🧀\n\n`;
-            
-            if (totalFreePacks > 0) {
-                text += `📦 ${totalPacksDelivered}x Pacotes de Pão de Queijo (${totalUnits} unidades)\n`;
-                if (promoFreePacks > 0 && loyaltyPacks > 0) {
-                    text += `🎁 Incluindo ${totalFreePacks} pacotes GRÁTIS (Promoção + Cartão de Fidelidade)!\n`;
-                } else if (promoFreePacks > 0) {
-                    text += `🎁 Incluindo ${totalFreePacks} pacote(s) GRÁTIS da promoção!\n`;
-                } else {
-                    text += `🎁 Incluindo 1 pacote GRÁTIS do seu Cartão de Fidelidade!\n`;
-                }
-            } else {
-                text += `📦 ${packs}x Pacotes de Pão de Queijo (${totalUnits} unidades)\n`;
-            }
-
-            if (isBaked) {
-                text += `🔥 Taxa de Preparo (Assado + Embalagens): €${totalBakedFee.toFixed(2)}\n`;
-            }
-
-            if (selectedLocation) {
-                text += `📍 Local: ${selectedLocation.name}\n`;
-                if (isFreeShipping) {
-                    text += `🚚 Frete: Grátis (Entrega à ${selectedLocation.day})\n`;
-                } else {
-                    text += `🚚 Frete: €${shippingCost.toFixed(2)} (Entrega à ${selectedLocation.day})\n`;
-                }
-            } else {
-                text += `📍 Local: A definir\n`;
-                text += `🚚 Frete: ${isFreeShipping ? 'Grátis' : 'A calcular'}\n`;
-            }
-
-            text += `💰 Total do Pedido: €${grandTotal.toFixed(2)}\n\n`;
-            text += `Para confirmar o pedido, é só responder esta mensagem!`;
-
-            smsTextarea.value = text;
-        }
-
-        // ==== UPDATE UI: BRIGADEIROS ====
-        function updateBrigUI() {
-            let tierKey = brigTierSelect.value;
-            let tierData = brigadeiroTiers[tierKey];
-            let unitsPerBatch = parseInt(tierKey);
-            
-            let totalUnits = unitsPerBatch * brigQty;
-            let productPrice = tierData.price * brigQty;
-            
-            brigTotalUnitsInfo.innerText = `Total: ${totalUnits} unidades`;
-
-            const isFreeShipping = totalUnits >= 50;
-            const shippingCost = calculateShippingCost(isFreeShipping);
-
-            // Embalagens para Brigadeiro (48 un. por caixa)
-            let boxCap = 48;
-            let boxCost = parseFloat(brigBoxPriceInput.value) || 0;
-            let totalBoxes = Math.ceil(totalUnits / boxCap);
-            let totalBoxFee = totalBoxes * boxCost;
-
-            brigMathBoxes.innerText = `${totalBoxes} caixa(s) necessária(s)`;
-            brigBoxesTotal.innerText = `Total Embalagem: €${totalBoxFee.toFixed(2)}`;
-
-            sumPrice.innerText = `€${productPrice.toFixed(2)}`;
-            
-            if (shippingCost !== null) {
-                sumShipping.innerText = isFreeShipping ? 'Grátis' : `€${shippingCost.toFixed(2)}`;
-                sumShipping.className = `text-lg md:text-xl font-bold mt-1 ${isFreeShipping ? 'text-green-600' : 'text-gray-800'}`;
-            } else {
-                sumShipping.innerText = 'Selecione';
-                sumShipping.className = 'text-lg md:text-xl font-bold mt-1 text-gray-400';
-            }
-
-            sumUnit.innerText = `€${(productPrice / totalUnits).toFixed(2)}`;
-
-            const grandTotal = productPrice + (shippingCost || 0) + totalBoxFee;
-            sumGrandTotal.innerText = `€${grandTotal.toFixed(2)}`;
-
-            if (isFreeShipping) {
-                promoBanner.classList.remove('hidden');
-                promoBannerText.innerText = `Entrega Grátis incluída! 🎁`;
-            } else {
-                promoBanner.classList.add('hidden');
-            }
-
-            if (brigQty === 0) {
-                smsTextarea.value = '';
-                return;
-            }
-
-            let text = `Olá! Aqui está o resumo da sua encomenda: 🍫\n\n`;
-            text += `📦 ${brigQty}x Lote(s) de Brigadeiros Gourmet (${unitsPerBatch}un)\n`;
-            text += `✨ Total de doces: ${totalUnits} unidades\n`;
-            
-            if (totalBoxFee > 0) {
-                text += `🎀 Embalagem Especial (${totalBoxes} caixa${totalBoxes > 1 ? 's' : ''}): €${totalBoxFee.toFixed(2)}\n`;
-            }
-
-            if (selectedLocation) {
-                text += `📍 Local: ${selectedLocation.name}\n`;
-                if (isFreeShipping) {
-                    text += `🚚 Frete: Grátis (Entrega à ${selectedLocation.day})\n`;
-                } else {
-                    text += `🚚 Frete: €${shippingCost.toFixed(2)} (Entrega à ${selectedLocation.day})\n`;
-                }
-            } else {
-                text += `📍 Local: A definir\n`;
-                text += `🚚 Frete: ${isFreeShipping ? 'Grátis' : 'A calcular'}\n`;
-            }
-
-            text += `💰 Total do Pedido: €${grandTotal.toFixed(2)}\n\n`;
-            text += `Para confirmar a encomenda, é só responder esta mensagem!`;
-
-            smsTextarea.value = text;
-        }
-
-        // ==== EVENTOS ====
-
-        // Pão de Queijo Inputs
-        btnMinus.addEventListener('click', () => {
-            if (packs > 0) { packs--; inputPacks.value = packs; updateUI(); }
-        });
-        btnPlus.addEventListener('click', () => {
-            packs++; inputPacks.value = packs; updateUI();
-        });
-        inputPacks.addEventListener('change', (e) => {
-            let val = parseInt(e.target.value);
-            packs = isNaN(val) || val < 0 ? 0 : val;
-            inputPacks.value = packs;
-            updateUI();
-        });
-        toggleLoyalty.addEventListener('change', updateUI);
-        toggleBaked.addEventListener('change', () => {
-            if (toggleBaked.checked) {
-                bakedOptions.classList.remove('hidden');
-            } else {
-                bakedOptions.classList.add('hidden');
-            }
-            updateUI();
-        });
-        [inputBatchPrice, inputBoxPrice].forEach(input => {
-            input.addEventListener('input', updateUI);
-        });
-
-        // Brigadeiros Inputs
-        brigTierSelect.addEventListener('change', updateUI);
-        
-        btnBrigMinus.addEventListener('click', () => {
-            if (brigQty > 1) { brigQty--; brigQtyInput.value = brigQty; updateUI(); }
-        });
-        btnBrigPlus.addEventListener('click', () => {
-            brigQty++; brigQtyInput.value = brigQty; updateUI();
-        });
-        brigQtyInput.addEventListener('change', (e) => {
-            let val = parseInt(e.target.value);
-            brigQty = isNaN(val) || val < 1 ? 1 : val;
-            brigQtyInput.value = brigQty;
-            updateUI();
-        });
-        brigBoxPriceInput.addEventListener('input', updateUI);
-
-        // Dropdown de Localidades (Compartilhado)
-        function renderDropdown(filterText = '') {
-            dropdown.innerHTML = '';
-            
-            const filtered = locationsData.filter(loc => 
-                loc.name.toLowerCase().includes(filterText.toLowerCase())
-            );
-
-            if (filtered.length === 0) {
-                dropdown.innerHTML = '<li class="p-3 text-gray-500 text-sm text-center">Nenhuma localidade encontrada.</li>';
-            } else {
-                filtered.forEach(loc => {
-                    const li = document.createElement('li');
-                    li.className = 'p-3 hover:bg-orange-50 cursor-pointer border-b border-gray-100 last:border-0 text-gray-700 transition-colors';
-                    li.innerText = loc.name;
-                    
-                    li.addEventListener('click', () => {
-                        selectedLocation = loc;
-                        searchInput.value = loc.name;
-                        dropdown.classList.add('hidden');
-                        
-                        selectedInfo.classList.remove('hidden');
-                        deliveryDaySpan.innerText = loc.day;
-                        
-                        updateUI();
-                    });
-                    
-                    dropdown.appendChild(li);
-                });
-            }
-        }
 
         searchInput.addEventListener('input', (e) => {
-            renderDropdown(e.target.value);
+            dropdown.innerHTML = '';
+            const filtered = locationsData.filter(loc => loc.name.toLowerCase().includes(e.target.value.toLowerCase()));
+            if(filtered.length === 0) dropdown.innerHTML = '<li class="p-3 text-gray-400 text-sm">Sem resultados.</li>';
+            filtered.forEach(loc => {
+                const li = document.createElement('li');
+                li.className = 'p-3 hover:bg-orange-50 cursor-pointer border-b border-gray-100 last:border-0 text-gray-700 text-sm';
+                li.innerText = loc.name;
+                li.onclick = () => {
+                    selectedLocation = loc;
+                    searchInput.value = loc.name;
+                    dropdown.classList.add('hidden');
+                    selectedInfo.classList.remove('hidden');
+                    document.getElementById('delivery-day').innerText = loc.day;
+                    updateCartUI();
+                };
+                dropdown.appendChild(li);
+            });
             dropdown.classList.remove('hidden');
-            if (e.target.value === '') {
-                selectedLocation = null;
-                selectedInfo.classList.add('hidden');
-                updateUI();
-            }
+            if(e.target.value === '') { selectedLocation = null; selectedInfo.classList.add('hidden'); updateCartUI(); }
         });
+        searchInput.addEventListener('focus', () => searchInput.dispatchEvent(new Event('input')));
+        document.addEventListener('click', (e) => { if(!searchInput.contains(e.target) && !dropdown.contains(e.target)) dropdown.classList.add('hidden'); });
 
-        searchInput.addEventListener('focus', () => {
-            renderDropdown(searchInput.value);
-            dropdown.classList.remove('hidden');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
-        // Botão de Copiar (Compartilhado)
-        btnCopy.addEventListener('click', () => {
-            if (!smsTextarea.value) return;
-
-            navigator.clipboard.writeText(smsTextarea.value).then(() => {
-                const isBrig = activeTab === 'brig';
-                
-                btnCopy.classList.replace(isBrig ? 'bg-amber-100' : 'bg-orange-100', 'bg-green-100');
-                btnCopy.classList.replace(isBrig ? 'text-amber-700' : 'text-orange-700', 'text-green-700');
-                btnCopy.classList.remove(isBrig ? 'hover:bg-amber-200' : 'hover:bg-orange-200');
-                
+        // ==== COPIAR SMS ====
+        document.getElementById('btn-copy').addEventListener('click', () => {
+            const txt = document.getElementById('sms-textarea').value;
+            if(!txt) return;
+            navigator.clipboard.writeText(txt).then(() => {
+                const btn = document.getElementById('btn-copy');
+                const originalText = document.getElementById('copy-text').innerText;
                 document.getElementById('copy-text').innerText = 'Copiado!';
-                document.getElementById('copy-icon').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-
+                btn.classList.replace('bg-green-100', 'bg-blue-100');
+                btn.classList.replace('text-green-700', 'text-blue-700');
                 setTimeout(() => {
-                    btnCopy.classList.replace('bg-green-100', isBrig ? 'bg-amber-100' : 'bg-orange-100');
-                    btnCopy.classList.replace('text-green-700', isBrig ? 'text-amber-700' : 'text-orange-700');
-                    btnCopy.classList.add(isBrig ? 'hover:bg-amber-200' : 'hover:bg-orange-200');
-                    document.getElementById('copy-text').innerText = 'Copiar';
-                    document.getElementById('copy-icon').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                    document.getElementById('copy-text').innerText = originalText;
+                    btn.classList.replace('bg-blue-100', 'bg-green-100');
+                    btn.classList.replace('text-blue-700', 'text-green-700');
                 }, 2000);
             });
         });
 
-        // Initialize UI
-        updateUI();
-
+        // Initialize
+        updatePdqForm();
+        updateBrigForm();
     </script>
 </body>
 </html>
