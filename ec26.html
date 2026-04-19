@@ -101,6 +101,10 @@
                     Type any unexpected question the interviewer asks to get a perfectly tailored response instantly.
                 </p>
                 
+                <div class="mb-4">
+                    <input type="password" id="api-key-input" placeholder="Optional: Paste Gemini API Key here (Required if running externally on GitHub)" class="w-full px-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" />
+                </div>
+                
                 <form id="live-form" class="flex gap-2">
                     <input
                         type="text"
@@ -361,7 +365,22 @@
             successContent.classList.add('hidden');
             errorText.classList.add('hidden');
 
-            const apiKey = ""; // Provided by environment
+            const envKey = ""; // Provided by environment
+            const userKey = document.getElementById('api-key-input').value.trim();
+            const apiKey = userKey || envKey;
+
+            if (!apiKey) {
+                inputField.disabled = false;
+                submitBtn.disabled = false;
+                loadingSpinner.classList.add('hidden');
+                btnText.textContent = "Generate Answer";
+                resultContainer.classList.remove('hidden');
+                resultContainer.className = "mt-6 p-5 rounded-lg border-l-4 bg-red-50 border-red-500 animate-in fade-in slide-in-from-bottom-2 duration-300 relative";
+                errorText.textContent = "API Key missing! Since you are running this outside the canvas environment (e.g., GitHub), please paste a free Gemini API key in the field above.";
+                errorText.classList.remove('hidden');
+                return;
+            }
+
             const systemPrompt = `You are a real-time interview assistant for Pedro Simplicio. 
             Pedro is currently in an interview for the Event Manager position at Fast Track (an iGaming CRM company in Malta). 
             Pedro's background: 8+ years in iGaming marketing. Currently Senior Communications, Brand & PR Specialist at Playhill Limited (Clever Advertising) in Malta. Before that, high-level strategy consulting (MindSumo #2 globally) for Fortune 500s.
@@ -464,8 +483,14 @@
             tpText.textContent = text;
             tpModal.classList.remove('hidden');
             tpContainer.scrollTop = 0;
-            tpIsPlaying = false;
+            
+            // Auto-play at lowest speed
+            tpSpeedSlider.value = "0.5";
+            tpIsPlaying = true;
             updatePlayUI();
+            
+            if (tpAnimationId) cancelAnimationFrame(tpAnimationId);
+            tpAnimationId = requestAnimationFrame(scrollLoop);
         }
 
         function closeTeleprompter() {
