@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Track Interview Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Smooth transition for the accordion content */
+        .accordion-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.open {
+            opacity: 1;
+        }
+
+        /* Hide scrollbar for teleprompter for a cleaner look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900 pb-24 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white py-6 px-4 shadow-md sticky top-0 z-10">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold tracking-tight">Fast Track Interview Helper</h1>
+                <p class="text-sm text-slate-300 font-medium mt-1">Role: Event Manager | Interviewer: Paulinha</p>
+            </div>
+            <div class="hidden sm:block text-right">
+                <span class="inline-block px-3 py-1 bg-slate-800 text-xs text-slate-300 rounded-full font-mono">
+                    CONFIDENTIAL
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        
+        <!-- Two-Column Questions Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            
+            <!-- Left Column: Core Narratives -->
+            <section>
+                <div class="flex items-center mb-6">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3 shadow-sm">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800">Core Narratives</h2>
+                </div>
+                <div id="core-accordion-container" class="space-y-3">
+                    <!-- Injected via JS -->
+                </div>
+            </section>
+
+            <!-- Right Column: Standard Questions -->
+            <section>
+                <div class="flex items-center mb-6">
+                    <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3 shadow-sm">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800">Strategic & Behavioral</h2>
+                </div>
+                <div id="basic-accordion-container" class="space-y-3">
+                    <!-- Injected via JS -->
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Live Assistant Section -->
+        <section class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden max-w-4xl mx-auto">
+            <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Live Interview Co-Pilot
+                </h2>
+                <span class="flex h-3 w-3 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-300 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-100"></span>
+                </span>
+            </div>
+            
+            <div class="p-6">
+                <p class="text-sm text-slate-500 mb-4">
+                    Type any unexpected question the interviewer asks to get a perfectly tailored response instantly.
+                </p>
+                
+                <form id="live-form" class="flex gap-2">
+                    <input
+                        type="text"
+                        id="live-question"
+                        placeholder="e.g. How do you measure the ROI of an event?"
+                        class="flex-1 px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+                    />
+                    <button
+                        type="submit"
+                        id="submit-btn"
+                        class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
+                    >
+                        <span id="loading-spinner" class="hidden">
+                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        <span id="btn-text">Generate Answer</span>
+                    </button>
+                </form>
+
+                <!-- Answer Display Container -->
+                <div id="result-container" class="hidden mt-6 p-5 rounded-lg border-l-4 animate-in fade-in slide-in-from-bottom-2 duration-300 relative">
+                    <p id="error-text" class="hidden text-red-700 font-medium"></p>
+                    <div id="success-content" class="hidden pb-12">
+                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-2 block">Suggested Answer:</span>
+                        <p id="answer-text" class="text-slate-800 text-lg leading-relaxed whitespace-pre-wrap font-medium"></p>
+                        
+                        <!-- Teleprompter Button for Live Answer -->
+                        <button type="button" onclick="openLiveTeleprompter()" class="absolute bottom-4 right-5 px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 flex items-center gap-2 shadow-sm transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            Teleprompter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Teleprompter Modal Overlay -->
+    <div id="tp-modal" class="hidden fixed inset-0 bg-slate-950 z-50 flex flex-col font-sans">
+        <!-- Teleprompter Controls -->
+        <div class="bg-slate-900/90 border-b border-slate-800 p-4 flex justify-between items-center text-slate-200 z-10 backdrop-blur-sm">
+            <div class="flex items-center gap-6">
+                <button id="tp-play" onclick="toggleTeleprompterPlay()" class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold transition-colors min-w-[140px] justify-center">
+                    <svg id="tp-icon-play" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                    <svg id="tp-icon-pause" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                    <span id="tp-play-text">Play (Space)</span>
+                </button>
+                
+                <div class="flex items-center gap-3 bg-slate-800 px-4 py-2.5 rounded-lg border border-slate-700">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <label for="tp-speed" class="text-sm font-medium tracking-wide">Speed:</label>
+                    <input type="range" id="tp-speed" min="0.5" max="3" step="0.1" value="1" class="w-32 accent-indigo-500 cursor-pointer">
+                </div>
+            </div>
+            
+            <button onclick="closeTeleprompter()" class="flex items-center gap-2 px-4 py-2 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition-colors border border-transparent hover:border-slate-700">
+                <span class="text-sm font-semibold">Close (Esc)</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Teleprompter Scrolling Text Area -->
+        <div class="flex-1 relative overflow-hidden bg-slate-950">
+            <!-- Focus Line -->
+            <div class="pointer-events-none absolute left-0 right-0 top-1/2 h-20 -translate-y-1/2 border-y border-indigo-500/30 bg-indigo-500/5 z-0 shadow-[0_0_50px_rgba(99,102,241,0.1)]"></div>
+            
+            <!-- Scrolling Container -->
+            <div id="tp-scroll-container" class="absolute inset-0 overflow-y-auto no-scrollbar pt-[45vh] pb-[60vh] px-8 scroll-smooth z-10">
+                <div id="tp-text" class="text-white text-5xl md:text-6xl font-bold leading-normal md:leading-relaxed max-w-4xl mx-auto text-center tracking-tight opacity-90 drop-shadow-md">
+                    <!-- Text injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data Repositories ---
+        
+        const coreQuestions = [
+            {
+                id: 'c1',
+                question: "Why are you interested in this mid-level Event Manager role instead of a Head of Department?",
+                answer: "In my current role, I oversee a broad spectrum of communications—PR, brand strategy, and media relations. But the truth is, the area I consistently find the most rewarding is the direct, hands-on execution of our events. Whether I’m on the floor managing our presence at an SBC Summit or organizing an internal activation, that’s where I thrive. I applied for this specific role because I am looking to specialize. I want to take the logistical and operational expertise I’m actively using right now and dedicate 100% of my energy to elevating Fast Track’s event presence, without the distraction of running a broader PR department."
+            },
+            {
+                id: 'c2',
+                question: "Can you give me an example of your experience managing large-scale external events in the iGaming space?",
+                answer: "A great recent example is the SBC Summit in Lisbon last September. We were Platinum Sponsors, which meant the scale was massive. I oversaw the end-to-end execution. This included the initial stand design and vendor negotiations, all the way through to managing the on-site logistics for over 100 of our internal staff who attended. I handled booth operations, catering logistics, and made sure our brand visibility was flawless for the thousands of visitors. For me, it’s not just about planning from a desk; it’s about being there on-site, managing live troubleshooting, and ensuring the post-event breakdown and reporting perfectly capture our ROI."
+            },
+            {
+                id: 'c3',
+                question: "Do you have experience managing internal events and employee activations?",
+                answer: "I’m really glad you asked that, because I actually view internal events as just as critical as B2B trade shows. At my current company, Playhill Limited, managing internal events is a core part of my remit. I coordinate our major annual gatherings, like the Christmas and Summer parties, as well as smaller employee activations. My philosophy is that your employees are your most important VIP audience. When you build an internal event that genuinely engages the team—much like what I saw regarding Fast Track’s culture—you build a stronger, more unified brand that translates into better external performance. I’d be incredibly excited to bring that logistical care to the Growth Summit."
+            },
+            {
+                id: 'c4',
+                question: "Tell me about a time something went wrong on-site and how you handled it.",
+                answer: "At SBC Lisbon last year, we switched stand builders and ran into several cascading issues right before the event. The most critical was our centerpiece—a massive 3D 'V' logo structure. The upper right portion has a 90-degree inward turn, and the builders executed it poorly on the reverse side. I collaborated with them to implement an overnight fix: we had the top part redone and placed a reflective film between the front and back views to maintain brand coherence from every angle. On top of that, meeting rooms were given bulky ground AC units with drip trays instead of the contracted split ACs, the mini-fridge didn't fit the custom cabinets, and catering was running late. Because I always make sure to have the direct personal numbers of local coordinators—and because I'm never above running out to buy snacks or a stand fan myself to keep things moving—we managed to execute quick workarounds for the structural mismatches. Thankfully, due to careful planning, management, and comprehensive pre-event briefs, we never had issues with the critical components like speaking slots, sponsorships, or attendee coordination—even at an event as massive as Lisbon. The culture we've built with the marketing and commercial teams ensures everyone represents the brand to the highest standard. So, despite the behind-the-scenes chaos, the team and our visitors just experienced a flawless event."
+            },
+            {
+                id: 'c5',
+                question: "Aside from the role itself, what is it about Fast Track that made you want to join this specific team?",
+                answer: "Two main reasons: market position and workplace culture. Fast Track isn’t just an operator; it’s a B2B tech disruptor actively redefining CRM in our industry. Marketing a true market-leader is fundamentally different—and more exciting—than marketing a follower. Secondly, reading Simon’s views and seeing your Great Place to Work certification tells me you don't just talk about culture; you operationalize it. Even using an AI tool like Metaview today shows me you value modern workflows, which aligns perfectly with how I operate."
+            },
+            {
+                id: 'c6',
+                question: "(If asked) I see you noted a salary expectation of €40,000 - €45,000 this time around. Does that still hold true?",
+                answer: "It’s a fair question. When I previously applied, I was targeting a Head of Department track and benchmarking the salary to that executive scope. But over the last year, reflecting on where I actually deliver the most value and find the most fulfillment, it’s undeniably in on-the-ground event execution—not administrative department management. I proactively adjusted my expectation to the 40-45k range because I want this specific, hands-on role. I’m prioritizing a role that genuinely excites me, and joining a culture like Fast Track’s, over chasing a broader title."
+            }
+        ];
+
+        const basicQuestions = [
+            {
+                id: 'b1',
+                question: "Tell me about yourself.",
+                answer: "I’m a communications and brand strategist by trade, but an event producer at heart. I’ve spent the last 8+ years in the iGaming ecosystem, currently driving global brand visibility for Playhill Limited. Before this, I did high-level strategy consulting for Fortune 500s like Mercedes and P&G. What ties my career together is a deep understanding of how to translate business KPIs into physical, measurable experiences. I’m here today because I want to double down on the execution side of that equation, specializing entirely in creating world-class events."
+            },
+            {
+                id: 'b2',
+                question: "Why are you looking to make a move now?",
+                answer: "At my current company, I successfully co-founded and structured our Brand and Corporate Comms department. The team is running like a well-oiled machine right now. But because my current remit is so broad—covering PR, social media, and overarching strategy—I realized I was spending less time doing the one thing I love most: orchestrating major events. I’m making a move now because I want to be hands-on, specializing entirely in event management within a tech-forward, dynamic environment."
+            },
+            {
+                id: 'b3',
+                question: "What do you know about our product?",
+                answer: "I know that Fast Track is solving the biggest bottleneck in iGaming: siloed data. You provide a centralized CRM platform that allows operators to automate workflows, segment audiences in real-time, and personalize player engagement at scale. Instead of marketing teams manually crunching spreadsheets, your tech allows them to focus on high-level growth and retention strategies. From an events perspective, that’s an incredibly powerful narrative to build a booth and a global sponsorship around."
+            },
+            {
+                id: 'b4',
+                question: "What do you envision as career progression here?",
+                answer: "My day-one priority is absolute mastery of the event calendar and proving the commercial ROI of the events we execute. Once that engine is running flawlessly, my progression wouldn't be about stepping away from events into management, but rather scaling the impact of those events. I envision taking on larger global roadshows, optimizing our event budget strategies, and potentially mentoring a specialized events team as Fast Track’s global footprint continues to expand."
+            },
+            {
+                id: 'b5',
+                question: "What are your hobbies?",
+                answer: "Since we live here in Malta, I try to take full advantage of the outdoors. I love trekking and spending time at the beach to completely disconnect, usually with my family. I’m also big on sports and music to keep my energy up, but my real creative outlet at home is cooking. It requires a different kind of focus and planning, which is actually a great balance to the fast-paced iGaming world."
+            },
+            {
+                id: 'b6',
+                question: "Do you have any questions for us?",
+                answer: "Yes, I have a couple! Given the sophisticated nature of Fast Track’s CRM, how do your global trade shows currently feed into the sales pipeline—are we optimizing more for high-level brand awareness, or aggressive, quantifiable lead generation? Also, what does the first 90 days look like for the person stepping into this role, specifically regarding taking over the current annual event calendar?"
+            }
+        ];
+
+        // Global store to fetch text by ID quickly for the teleprompter
+        const allAnswersMap = {};
+
+        // --- Render Accordions ---
+        function renderCategory(dataList, containerId) {
+            const container = document.getElementById(containerId);
+            
+            dataList.forEach((q) => {
+                allAnswersMap[q.id] = q.answer; // Add to global map
+
+                const itemHTML = `
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm transition-all duration-200 hover:shadow-md relative">
+                        <button
+                            class="w-full text-left px-5 py-4 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset bg-white relative z-10"
+                            onclick="toggleAccordion('content-${q.id}', 'icon-${q.id}')"
+                        >
+                            <span class="font-semibold text-slate-800 pr-4 text-sm md:text-base">${q.question}</span>
+                            <svg 
+                                id="icon-${q.id}"
+                                class="w-5 h-5 text-slate-500 transform transition-transform duration-200 flex-shrink-0" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        
+                        <div id="content-${q.id}" class="accordion-content relative z-0">
+                            <div class="px-5 pb-16 pt-1 text-slate-700 leading-relaxed border-t border-slate-100">
+                                <p class="pl-4 border-l-4 border-blue-500 font-medium text-sm md:text-base">
+                                    ${q.answer}
+                                </p>
+                            </div>
+                            <button onclick="openPredefinedTeleprompter('${q.id}')" class="absolute bottom-4 right-5 px-3 py-1.5 bg-slate-800 text-white rounded-md text-sm font-medium hover:bg-slate-700 flex items-center gap-2 shadow-sm transition-colors z-20">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                Teleprompter
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += itemHTML;
+            });
+        }
+
+        renderCategory(coreQuestions, 'core-accordion-container');
+        renderCategory(basicQuestions, 'basic-accordion-container');
+
+        // --- Accordion Logic ---
+        let currentlyOpenId = null;
+        let currentlyOpenIcon = null;
+
+        function toggleAccordion(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+
+            if (currentlyOpenId && currentlyOpenId !== contentId) {
+                const openContent = document.getElementById(currentlyOpenId);
+                const openIcon = document.getElementById(currentlyOpenIcon);
+                if (openContent && openIcon) {
+                    openContent.style.maxHeight = null;
+                    openContent.classList.remove('open');
+                    openIcon.classList.remove('rotate-180');
+                }
+            }
+
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                content.classList.remove('open');
+                icon.classList.remove('rotate-180');
+                currentlyOpenId = null;
+                currentlyOpenIcon = null;
+            } else {
+                content.style.maxHeight = (content.scrollHeight + 50) + "px";
+                content.classList.add('open');
+                icon.classList.add('rotate-180');
+                currentlyOpenId = contentId;
+                currentlyOpenIcon = iconId;
+            }
+        }
+
+        // --- Gemini API Logic ---
+        let currentLiveAnswer = "";
+        const inputField = document.getElementById('live-question');
+        const submitBtn = document.getElementById('submit-btn');
+
+        inputField.addEventListener('input', () => {
+            submitBtn.disabled = inputField.value.trim().length === 0;
+        });
+
+        document.getElementById('live-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const questionText = inputField.value.trim();
+            if (!questionText) return;
+
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const btnText = document.getElementById('btn-text');
+            const resultContainer = document.getElementById('result-container');
+            const successContent = document.getElementById('success-content');
+            const answerText = document.getElementById('answer-text');
+            const errorText = document.getElementById('error-text');
+
+            inputField.disabled = true;
+            submitBtn.disabled = true;
+            loadingSpinner.classList.remove('hidden');
+            btnText.textContent = "Thinking...";
+            resultContainer.classList.add('hidden');
+            successContent.classList.add('hidden');
+            errorText.classList.add('hidden');
+
+            const apiKey = ""; // Provided by environment
+            const systemPrompt = `You are a real-time interview assistant for Pedro Simplicio. 
+            Pedro is currently in an interview for the Event Manager position at Fast Track (an iGaming CRM company in Malta). 
+            Pedro's background: 8+ years in iGaming marketing. Currently Senior Communications, Brand & PR Specialist at Playhill Limited (Clever Advertising) in Malta. Before that, high-level strategy consulting (MindSumo #2 globally) for Fortune 500s.
+            He has hands-on experience running massive events (SBC Lisbon Platinum Sponsor, 100+ internal staff, vendor negotiation, booth ops, budget management).
+            He is pivoting from wanting a Head of Dept role to this Event Manager role because he wants to SPECIALIZE in hands-on execution and logistics, which is his true passion.
+            His salary expectation is voluntarily and strategically aligned at 40k-45k because he wants this specific role.
+            
+            The user will type a question the interviewer just asked. 
+            Write a natural, conversational, highly intelligent answer for Pedro to read aloud. 
+            Keep it concise (2-4 sentences max). 
+            Speak in the first person ("I"). 
+            Frame Pedro as a strategic, data-driven professional who loves being in the trenches of event execution.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: questionText }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            let attempt = 0;
+            let success = false;
+            let finalAnswer = "";
+            let errorMessage = "";
+
+            while (attempt < delays.length && !success) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+                    const data = await response.json();
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (text) {
+                        finalAnswer = text;
+                        success = true;
+                    } else {
+                        throw new Error("No text returned from API");
+                    }
+                } catch (err) {
+                    attempt++;
+                    if (attempt >= delays.length) {
+                        errorMessage = "Failed to get an answer. Please try rephrasing.";
+                    } else {
+                        await new Promise(res => setTimeout(res, delays[attempt - 1]));
+                    }
+                }
+            }
+
+            inputField.disabled = false;
+            submitBtn.disabled = false;
+            loadingSpinner.classList.add('hidden');
+            btnText.textContent = "Generate Answer";
+            resultContainer.classList.remove('hidden');
+
+            if (success) {
+                resultContainer.className = "mt-6 p-5 rounded-lg border-l-4 bg-indigo-50 border-indigo-500 animate-in fade-in slide-in-from-bottom-2 duration-300 relative";
+                currentLiveAnswer = finalAnswer.trim();
+                answerText.innerHTML = `"${currentLiveAnswer}"`;
+                successContent.classList.remove('hidden');
+            } else {
+                resultContainer.className = "mt-6 p-5 rounded-lg border-l-4 bg-red-50 border-red-500 animate-in fade-in slide-in-from-bottom-2 duration-300";
+                errorText.textContent = errorMessage;
+                errorText.classList.remove('hidden');
+            }
+
+            setTimeout(() => {
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                inputField.focus();
+            }, 100);
+        });
+
+        // --- Teleprompter Logic ---
+        const tpModal = document.getElementById('tp-modal');
+        const tpText = document.getElementById('tp-text');
+        const tpContainer = document.getElementById('tp-scroll-container');
+        const tpSpeedSlider = document.getElementById('tp-speed');
+        const tpPlayText = document.getElementById('tp-play-text');
+        const tpIconPlay = document.getElementById('tp-icon-play');
+        const tpIconPause = document.getElementById('tp-icon-pause');
+
+        let tpIsPlaying = false;
+        let tpAnimationId = null;
+
+        function openPredefinedTeleprompter(id) {
+            launchTeleprompter(allAnswersMap[id]);
+        }
+
+        function openLiveTeleprompter() {
+            if (currentLiveAnswer) launchTeleprompter(currentLiveAnswer);
+        }
+
+        function launchTeleprompter(text) {
+            tpText.textContent = text;
+            tpModal.classList.remove('hidden');
+            tpContainer.scrollTop = 0;
+            tpIsPlaying = false;
+            updatePlayUI();
+        }
+
+        function closeTeleprompter() {
+            tpModal.classList.add('hidden');
+            tpIsPlaying = false;
+            if (tpAnimationId) cancelAnimationFrame(tpAnimationId);
+        }
+
+        function toggleTeleprompterPlay() {
+            tpIsPlaying = !tpIsPlaying;
+            updatePlayUI();
+            
+            if (tpIsPlaying) {
+                tpAnimationId = requestAnimationFrame(scrollLoop);
+            } else {
+                if (tpAnimationId) cancelAnimationFrame(tpAnimationId);
+            }
+        }
+
+        function updatePlayUI() {
+            if (tpIsPlaying) {
+                tpPlayText.textContent = "Pause (Space)";
+                tpIconPlay.classList.add('hidden');
+                tpIconPause.classList.remove('hidden');
+            } else {
+                tpPlayText.textContent = "Play (Space)";
+                tpIconPlay.classList.remove('hidden');
+                tpIconPause.classList.add('hidden');
+            }
+        }
+
+        function scrollLoop() {
+            if (!tpIsPlaying) return;
+            
+            tpContainer.scrollTop += parseFloat(tpSpeedSlider.value);
+
+            if (Math.ceil(tpContainer.scrollTop + tpContainer.clientHeight) >= tpContainer.scrollHeight) {
+                tpIsPlaying = false;
+                updatePlayUI();
+                return;
+            }
+
+            tpAnimationId = requestAnimationFrame(scrollLoop);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (!tpModal.classList.contains('hidden')) {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    toggleTeleprompterPlay();
+                } else if (e.code === 'Escape') {
+                    e.preventDefault();
+                    closeTeleprompter();
+                } else if (e.code === 'ArrowUp') {
+                    e.preventDefault();
+                    tpContainer.scrollTop -= 50;
+                } else if (e.code === 'ArrowDown') {
+                    e.preventDefault();
+                    tpContainer.scrollTop += 50;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
