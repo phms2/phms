@@ -25,6 +25,15 @@
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
         }
+        
+        /* Toggle Switch Custom Styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #6366f1;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #6366f1;
+        }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900 pb-24 min-h-screen">
@@ -33,13 +42,26 @@
     <header class="bg-slate-900 text-white py-6 px-4 shadow-md sticky top-0 z-10">
         <div class="max-w-6xl mx-auto flex items-center justify-between">
             <div>
-                <h1 class="text-xl font-bold tracking-tight">Fast Track Interview Helper</h1>
-                <p class="text-sm text-slate-300 font-medium mt-1">Role: Event Manager | Interviewer: Paulinha</p>
+                <h1 class="text-xl font-bold tracking-tight" id="ui-title">Fast Track Interview Helper</h1>
+                <p class="text-sm text-slate-300 font-medium mt-1" id="ui-subtitle">Role: Event Manager | Interviewer: Paulinha</p>
             </div>
-            <div class="hidden sm:block text-right">
-                <span class="inline-block px-3 py-1 bg-slate-800 text-xs text-slate-300 rounded-full font-mono">
-                    CONFIDENTIAL
-                </span>
+            
+            <div class="flex items-center gap-6">
+                <!-- Language Toggle -->
+                <div class="flex items-center justify-center gap-2">
+                    <span class="text-xs font-semibold text-slate-300" id="lang-en">EN</span>
+                    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                        <input type="checkbox" name="toggle" id="lang-toggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 border-slate-400 appearance-none cursor-pointer transition-transform duration-200 ease-in-out z-10 top-0 left-0" onclick="toggleLanguage()"/>
+                        <label for="lang-toggle" class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-400 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-500" id="lang-pt">PT-BR</span>
+                </div>
+                
+                <div class="hidden sm:block text-right">
+                    <span class="inline-block px-3 py-1 bg-slate-800 text-xs text-slate-300 rounded-full font-mono">
+                        CONFIDENTIAL
+                    </span>
+                </div>
             </div>
         </div>
     </header>
@@ -57,7 +79,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
                     </div>
-                    <h2 class="text-2xl font-bold text-slate-800">Core Narratives</h2>
+                    <h2 class="text-2xl font-bold text-slate-800" id="ui-core-title">Core Narratives</h2>
                 </div>
                 <div id="core-accordion-container" class="space-y-3">
                     <!-- Injected via JS -->
@@ -72,7 +94,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                     </div>
-                    <h2 class="text-2xl font-bold text-slate-800">Strategic & Behavioral</h2>
+                    <h2 class="text-2xl font-bold text-slate-800" id="ui-basic-title">Strategic & Behavioral</h2>
                 </div>
                 <div id="basic-accordion-container" class="space-y-3">
                     <!-- Injected via JS -->
@@ -84,7 +106,7 @@
         <!-- Live Assistant Section -->
         <section class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden max-w-4xl mx-auto">
             <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                <h2 class="text-lg font-bold text-white flex items-center">
+                <h2 class="text-lg font-bold text-white flex items-center" id="ui-live-title">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
@@ -97,7 +119,7 @@
             </div>
             
             <div class="p-6">
-                <p class="text-sm text-slate-500 mb-4">
+                <p class="text-sm text-slate-500 mb-4" id="ui-live-desc">
                     Type any unexpected question the interviewer asks to get a perfectly tailored response instantly.
                 </p>
                 
@@ -127,7 +149,7 @@
                 <div id="result-container" class="hidden mt-6 p-5 rounded-lg border-l-4 animate-in fade-in slide-in-from-bottom-2 duration-300 relative">
                     <p id="error-text" class="hidden text-red-700 font-medium"></p>
                     <div id="success-content" class="hidden pb-12">
-                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-2 block">Suggested Answer:</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-2 block" id="ui-suggested">Suggested Answer:</span>
                         <p id="answer-text" class="text-slate-800 text-lg leading-relaxed whitespace-pre-wrap font-medium"></p>
                         
                         <!-- Teleprompter Button for Live Answer -->
@@ -182,83 +204,201 @@
     </div>
 
     <script>
+        // --- State Management ---
+        let currentLang = 'en'; // Defaults to English
+
         // --- Data Repositories ---
         
         const coreQuestions = [
             {
                 id: 'c1',
-                question: "Why are you interested in this mid-level Event Manager role instead of a Head of Department?",
-                answer: "In my current role, I oversee a broad spectrum of communications—PR, brand strategy, and media relations. But the truth is, the area I consistently find the most rewarding is the direct, hands-on execution of our events. Whether I’m on the floor managing our presence at an SBC Summit or organizing an internal activation, that’s where I thrive. I applied for this specific role because I am looking to specialize. I want to take the logistical and operational expertise I’m actively using right now and dedicate 100% of my energy to elevating Fast Track’s event presence, without the distraction of running a broader PR department."
+                en: {
+                    question: "Why are you interested in this mid-level Event Manager role instead of a Head of Department?",
+                    answer: "In my current role, I oversee a broad spectrum of communications—PR, brand strategy, and media relations. But the truth is, the area I consistently find the most rewarding is the direct, hands-on execution of our events. Whether I’m on the floor managing our presence at an SBC Summit or organizing an internal activation, that’s where I thrive. I applied for this specific role because I am looking to specialize. I want to take the logistical and operational expertise I’m actively using right now and dedicate 100% of my energy to elevating Fast Track’s event presence, without the distraction of running a broader PR department."
+                },
+                pt: {
+                    question: "Por que você está interessado nesta vaga de Event Manager de nível pleno em vez de Head of Department?",
+                    answer: "Na minha função atual, eu supervisiono um amplo espectro de comunicações — PR, brand strategy e media relations. Mas a verdade é que a área que considero consistentemente mais gratificante é a execução direta e hands-on dos nossos eventos. Seja no salão gerenciando nossa presença em um SBC Summit ou organizando uma ativação interna, é onde eu mais me destaco. Eu me candidatei a este cargo específico porque estou buscando me especializar. Quero pegar a expertise logística e operacional que uso ativamente hoje e dedicar 100% da minha energia para elevar a presença de eventos da Fast Track, sem a distração de administrar um departamento mais amplo de PR."
+                }
             },
             {
                 id: 'c2',
-                question: "Can you give me an example of your experience managing large-scale external events in the iGaming space?",
-                answer: "A great recent example is the SBC Summit in Lisbon last September. We were Platinum Sponsors, which meant the scale was massive. I oversaw the end-to-end execution. This included the initial stand design and vendor negotiations, all the way through to managing the on-site logistics for over 100 of our internal staff who attended. I handled booth operations, catering logistics, and made sure our brand visibility was flawless for the thousands of visitors. For me, it’s not just about planning from a desk; it’s about being there on-site, managing live troubleshooting, and ensuring the post-event breakdown and reporting perfectly capture our ROI."
+                en: {
+                    question: "Can you give me an example of your experience managing large-scale external events in the iGaming space?",
+                    answer: "A great recent example is the SBC Summit in Lisbon last September. We were Platinum Sponsors, which meant the scale was massive. I oversaw the end-to-end execution. This included the initial stand design and vendor negotiations, all the way through to managing the on-site logistics for over 100 of our internal staff who attended. I handled booth operations, catering logistics, and made sure our brand visibility was flawless for the thousands of visitors. For me, it’s not just about planning from a desk; it’s about being there on-site, managing live troubleshooting, and ensuring the post-event breakdown and reporting perfectly capture our ROI."
+                },
+                pt: {
+                    question: "Você pode me dar um exemplo da sua experiência gerenciando eventos externos de grande escala no setor de iGaming?",
+                    answer: "Um ótimo exemplo recente é o SBC Summit em Lisboa, em setembro passado. Éramos Platinum Sponsors, o que significou que a escala era massiva. Eu supervisionei a execução end-to-end. Isso incluiu o design inicial do stand e a negociação com fornecedores, até o gerenciamento da logística on-site para mais de 100 membros da nossa equipe interna que compareceram. Eu gerenciei as operações do stand, logística de catering e garanti que nossa visibilidade de marca fosse impecável para os milhares de visitantes. Para mim, não se trata apenas de planejar em uma mesa; trata-se de estar lá on-site, fazendo o live troubleshooting e garantindo que o breakdown pós-evento e o reporting capturem perfeitamente o nosso ROI."
+                }
             },
             {
                 id: 'c3',
-                question: "Do you have experience managing internal events and employee activations?",
-                answer: "I’m really glad you asked that, because I actually view internal events as just as critical as B2B trade shows. At my current company, Playhill Limited, managing internal events is a core part of my remit. I coordinate our major annual gatherings, like the Christmas and Summer parties, as well as smaller employee activations. My philosophy is that your employees are your most important VIP audience. When you build an internal event that genuinely engages the team—much like what I saw regarding Fast Track’s culture—you build a stronger, more unified brand that translates into better external performance. I’d be incredibly excited to bring that logistical care to the Growth Summit."
+                en: {
+                    question: "Do you have experience managing internal events and employee activations?",
+                    answer: "I’m really glad you asked that, because I actually view internal events as just as critical as B2B trade shows. At my current company, Playhill Limited, managing internal events is a core part of my remit. I coordinate our major annual gatherings, like the Christmas and Summer parties, as well as smaller employee activations. My philosophy is that your employees are your most important VIP audience. When you build an internal event that genuinely engages the team—much like what I saw regarding Fast Track’s culture—you build a stronger, more unified brand that translates into better external performance. I’d be incredibly excited to bring that logistical care to the Growth Summit."
+                },
+                pt: {
+                    question: "Você tem experiência no gerenciamento de eventos internos e employee activations?",
+                    answer: "Fico muito feliz que você tenha perguntado isso, porque na verdade eu vejo os eventos internos como tão essenciais quanto os trade shows B2B. Na minha empresa atual, a Playhill Limited (Clever Advertising), gerenciar eventos internos é uma parte central do meu escopo. Eu coordeno nossas principais reuniões anuais, como as festas de Natal e Verão, bem como employee activations menores. Minha filosofia é que os colaboradores são o seu público VIP mais importante. Quando você constrói um evento interno que engaja genuinamente a equipe — muito parecido com o que vi sobre a cultura da Fast Track —, você constrói uma marca mais forte e unida que se traduz em melhor performance externa. Eu ficaria incrivelmente animado em trazer esse cuidado logístico para o Growth Summit."
+                }
             },
             {
                 id: 'c4',
-                question: "Tell me about a time something went wrong on-site and how you handled it.",
-                answer: "At SBC Lisbon last year, we switched stand builders and ran into several cascading issues right before the event. The most critical was our centerpiece—a massive 3D 'V' logo structure. The upper right portion has a 90-degree inward turn, and the builders executed it poorly on the reverse side. I collaborated with them to implement an overnight fix: we had the top part redone and placed a reflective film between the front and back views to maintain brand coherence from every angle. On top of that, meeting rooms were given bulky ground AC units with drip trays instead of the contracted split ACs, the mini-fridge didn't fit the custom cabinets, and catering was running late. Because I always make sure to have the direct personal numbers of local coordinators—and because I'm never above running out to buy snacks or a stand fan myself to keep things moving—we managed to execute quick workarounds for the structural mismatches. Thankfully, due to careful planning, management, and comprehensive pre-event briefs, we never had issues with the critical components like speaking slots, sponsorships, or attendee coordination—even at an event as massive as Lisbon. The culture we've built with the marketing and commercial teams ensures everyone represents the brand to the highest standard. So, despite the behind-the-scenes chaos, the team and our visitors just experienced a flawless event."
+                en: {
+                    question: "Tell me about a time something went wrong on-site and how you handled it.",
+                    answer: "At SBC Lisbon last year, we switched stand builders and ran into several cascading issues right before the event. The most critical was our centerpiece—a massive 3D 'V' logo structure. The upper right portion has a 90-degree inward turn, and the builders executed it poorly on the reverse side. I collaborated with them to implement an overnight fix: we had the top part redone and placed a reflective film between the front and back views to maintain brand coherence from every angle. On top of that, meeting rooms were given bulky ground AC units with drip trays instead of the contracted split ACs, the mini-fridge didn't fit the custom cabinets, and catering was running late. Because I always make sure to have the direct personal numbers of local coordinators—and because I'm never above running out to buy snacks or a stand fan myself to keep things moving—we managed to execute quick workarounds for the structural mismatches. Thankfully, due to careful planning, management, and comprehensive pre-event briefs, we never had issues with the critical components like speaking slots, sponsorships, or attendee coordination—even at an event as massive as Lisbon. The culture we've built with the marketing and commercial teams ensures everyone represents the brand to the highest standard. So, despite the behind-the-scenes chaos, the team and our visitors just experienced a flawless event."
+                },
+                pt: {
+                    question: "Me conte sobre uma vez em que algo deu errado on-site e como você lidou com isso.",
+                    answer: "No SBC Lisboa do ano passado, nós trocamos os stand builders e enfrentamos vários problemas em cascata logo antes do evento. O mais crítico foi a nossa peça central — uma enorme estrutura de logotipo 'V' em 3D. A parte superior direita tem uma curva de 90 graus para dentro, e os construtores a executaram mal no lado reverso. Eu colaborei com eles para implementar um overnight fix: refizemos a parte superior e colocamos um filme reflexivo entre a visão frontal e traseira para manter a coerência da marca de qualquer ângulo. Além disso, as salas de reunião receberam unidades de ar-condicionado de chão com bandejas de gotejamento em vez dos split ACs contratados, o frigobar não cabia nos armários personalizados e o catering estava atrasado. Como sempre faço questão de ter o contato pessoal direto dos coordenadores locais — e como nunca hesito em sair correndo para comprar lanches ou um stand fan para manter as coisas funcionando —, conseguimos executar workarounds rápidos para os problemas estruturais. Felizmente, devido ao planejamento cuidadoso, gestão e pre-event briefs abrangentes, nunca tivemos problemas com componentes críticos como speaking slots, sponsorships ou coordenação de attendees — mesmo em um evento tão gigante como Lisboa. A cultura que construímos com as equipes de marketing e comercial garante que todos representem a marca com o mais alto padrão. Então, apesar do caos nos bastidores, a equipe e nossos visitantes vivenciaram um evento impecável."
+                }
             },
             {
                 id: 'c5',
-                question: "Aside from the role itself, what is it about Fast Track that made you want to join this specific team?",
-                answer: "Two main reasons: market position and workplace culture. Fast Track isn’t just an operator; it’s a B2B tech disruptor actively redefining CRM in our industry. Marketing a true market-leader is fundamentally different—and more exciting—than marketing a follower. Secondly, reading Simon’s views and seeing your Great Place to Work certification tells me you don't just talk about culture; you operationalize it. Even using an AI tool like Metaview today shows me you value modern workflows, which aligns perfectly with how I operate."
+                en: {
+                    question: "Aside from the role itself, what is it about Fast Track that made you want to join this specific team?",
+                    answer: "Two main reasons: market position and workplace culture. Fast Track isn’t just an operator; it’s a B2B tech disruptor actively redefining CRM in our industry. Marketing a true market-leader is fundamentally different—and more exciting—than marketing a follower. Secondly, reading Simon’s views and seeing your Great Place to Work certification tells me you don't just talk about culture; you operationalize it. Even using an AI tool like Metaview today shows me you value modern workflows, which aligns perfectly with how I operate."
+                },
+                pt: {
+                    question: "Além da função em si, o que há na Fast Track que fez você querer se juntar a essa equipe específica?",
+                    answer: "Por dois motivos principais: posicionamento de mercado e cultura de trabalho. A Fast Track não é apenas um operador; é um B2B tech disruptor redefinindo ativamente o CRM na nossa indústria. Fazer o marketing de um verdadeiro líder de mercado é fundamentalmente diferente — e mais empolgante — do que fazer de um follower. Em segundo lugar, ler as opiniões do Simon e ver a certificação Great Place to Work de vocês me diz que vocês não apenas falam sobre cultura; vocês a operacionalizam. Até mesmo usar uma ferramenta de IA como o Metaview hoje me mostra que vocês valorizam workflows modernos, o que se alinha perfeitamente à forma como eu opero."
+                }
             },
             {
                 id: 'c6',
-                question: "(If asked) I see you noted a salary expectation of €40,000 - €45,000 this time around. Does that still hold true?",
-                answer: "It’s a fair question. When I previously applied, I was targeting a Head of Department track and benchmarking the salary to that executive scope. But over the last year, reflecting on where I actually deliver the most value and find the most fulfillment, it’s undeniably in on-the-ground event execution—not administrative department management. I proactively adjusted my expectation to the 40-45k range because I want this specific, hands-on role. I’m prioritizing a role that genuinely excites me, and joining a culture like Fast Track’s, over chasing a broader title."
+                en: {
+                    question: "(If asked) I see you noted a salary expectation of €40,000 - €45,000 this time around. Does that still hold true?",
+                    answer: "It’s a fair question. When I previously applied, I was targeting a Head of Department track and benchmarking the salary to that executive scope. But over the last year, reflecting on where I actually deliver the most value and find the most fulfillment, it’s undeniably in on-the-ground event execution—not administrative department management. I proactively adjusted my expectation to the 40-45k range because I want this specific, hands-on role. I’m prioritizing a role that genuinely excites me, and joining a culture like Fast Track’s, over chasing a broader title."
+                },
+                pt: {
+                    question: "(Se perguntarem) Notei que sua expectativa salarial é de €40.000 - €45.000 desta vez. Isso ainda se mantém?",
+                    answer: "É uma pergunta justa. Quando me candidatei anteriormente, eu tinha como objetivo uma trilha de Head of Department e fiz o benchmark do salário para aquele escopo executivo. Mas, ao longo do último ano, refletindo sobre onde eu realmente entrego mais valor e encontro mais realização profissional, é inegavelmente na execução hands-on de eventos — e não na gestão administrativa do departamento. Eu ajustei proativamente minha expectativa para a faixa de 40 a 45 mil euros porque quero essa função específica. Estou priorizando um papel que me empolgue genuinamente, e ingressar em uma cultura como a da Fast Track, em vez de perseguir um cargo mais amplo."
+                }
             }
         ];
 
         const basicQuestions = [
             {
                 id: 'b1',
-                question: "Tell me about yourself.",
-                answer: "I’m a communications and brand strategist by trade, but an event producer at heart. I’ve spent the last 8+ years in the iGaming ecosystem, currently driving global brand visibility for Playhill Limited. Before this, I did high-level strategy consulting for Fortune 500s like Mercedes and P&G. What ties my career together is a deep understanding of how to translate business KPIs into physical, measurable experiences. I’m here today because I want to double down on the execution side of that equation, specializing entirely in creating world-class events."
+                en: {
+                    question: "Tell me about yourself.",
+                    answer: "I’m a communications and brand strategist by trade, but an event producer at heart. I’ve spent the last 8+ years in the iGaming ecosystem, currently driving global brand visibility for Playhill Limited. Before this, I did high-level strategy consulting for Fortune 500s like Mercedes and P&G. What ties my career together is a deep understanding of how to translate business KPIs into physical, measurable experiences. I’m here today because I want to double down on the execution side of that equation, specializing entirely in creating world-class events."
+                },
+                pt: {
+                    question: "Fale-me sobre você.",
+                    answer: "Sou um estrategista de comunicação e marca por formação, mas um produtor de eventos de coração. Passei os últimos 8 anos no ecossistema de iGaming, atualmente impulsionando a visibilidade global da marca da Playhill Limited. Antes disso, fiz consultoria de estratégia de alto nível para empresas da Fortune 500, como Mercedes e P&G. O que une minha carreira é uma profunda compreensão de como traduzir KPIs de negócios em experiências físicas e mensuráveis. Estou aqui hoje porque quero dobrar a aposta na execução, me especializando inteiramente na criação de eventos world-class."
+                }
             },
             {
                 id: 'b2',
-                question: "Why are you looking to make a move now?",
-                answer: "At my current company, I successfully co-founded and structured our Brand and Corporate Comms department. The team is running like a well-oiled machine right now. But because my current remit is so broad—covering PR, social media, and overarching strategy—I realized I was spending less time doing the one thing I love most: orchestrating major events. I’m making a move now because I want to be hands-on, specializing entirely in event management within a tech-forward, dynamic environment."
+                en: {
+                    question: "Why are you looking to make a move now?",
+                    answer: "At my current company, I successfully co-founded and structured our Brand and Corporate Comms department. The team is running like a well-oiled machine right now. But because my current remit is so broad—covering PR, social media, and overarching strategy—I realized I was spending less time doing the one thing I love most: orchestrating major events. I’m making a move now because I want to be hands-on, specializing entirely in event management within a tech-forward, dynamic environment."
+                },
+                pt: {
+                    question: "Por que você está buscando fazer essa mudança de carreira agora?",
+                    answer: "Na minha empresa atual, eu cofundei e estruturei com sucesso nosso departamento de Brand & Corporate Comms. A equipe está funcionando perfeitamente bem agora. Mas porque meu escopo atual é muito amplo — cobrindo PR, social media e a estratégia global —, percebi que estava passando menos tempo fazendo a única coisa que mais amo: orquestrar grandes eventos. Estou fazendo essa mudança agora porque quero ser hands-on, focando inteiramente em event management dentro de um ambiente tech-forward e dinâmico."
+                }
             },
             {
                 id: 'b3',
-                question: "What do you know about our product?",
-                answer: "I know that Fast Track is solving the biggest bottleneck in iGaming: siloed data. You provide a centralized CRM platform that allows operators to automate workflows, segment audiences in real-time, and personalize player engagement at scale. Instead of marketing teams manually crunching spreadsheets, your tech allows them to focus on high-level growth and retention strategies. From an events perspective, that’s an incredibly powerful narrative to build a booth and a global sponsorship around."
+                en: {
+                    question: "What do you know about our product?",
+                    answer: "I know that Fast Track is solving the biggest bottleneck in iGaming: siloed data. You provide a centralized CRM platform that allows operators to automate workflows, segment audiences in real-time, and personalize player engagement at scale. Instead of marketing teams manually crunching spreadsheets, your tech allows them to focus on high-level growth and retention strategies. From an events perspective, that’s an incredibly powerful narrative to build a booth and a global sponsorship around."
+                },
+                pt: {
+                    question: "O que você sabe sobre o nosso produto?",
+                    answer: "Eu sei que a Fast Track está resolvendo o maior gargalo do iGaming: dados em silos. Vocês fornecem uma plataforma de CRM centralizada que permite aos operadores automatizar workflows, segmentar públicos em tempo real e personalizar o player engagement em escala. Em vez de equipes de marketing lidando manualmente com planilhas, a tecnologia de vocês permite que foquem em estratégias de crescimento e retenção de alto nível. Do ponto de vista de eventos, essa é uma narrativa incrivelmente poderosa para se construir um stand e um sponsorship global em cima."
+                }
             },
             {
                 id: 'b4',
-                question: "What do you envision as career progression here?",
-                answer: "My day-one priority is absolute mastery of the event calendar and proving the commercial ROI of the events we execute. Once that engine is running flawlessly, my progression wouldn't be about stepping away from events into management, but rather scaling the impact of those events. I envision taking on larger global roadshows, optimizing our event budget strategies, and potentially mentoring a specialized events team as Fast Track’s global footprint continues to expand."
+                en: {
+                    question: "What do you envision as career progression here?",
+                    answer: "My day-one priority is absolute mastery of the event calendar and proving the commercial ROI of the events we execute. Once that engine is running flawlessly, my progression wouldn't be about stepping away from events into management, but rather scaling the impact of those events. I envision taking on larger global roadshows, optimizing our event budget strategies, and potentially mentoring a specialized events team as Fast Track’s global footprint continues to expand."
+                },
+                pt: {
+                    question: "Como você visualiza sua progressão de carreira aqui?",
+                    answer: "Minha prioridade no dia 1 é ter o domínio absoluto do calendário de eventos e comprovar o ROI comercial dos eventos que executamos. Assim que esse motor estiver funcionando de forma impecável, minha progressão não seria sobre me afastar dos eventos para o management corporativo, mas sim escalar o impacto desses eventos. Eu imagino assumir global roadshows maiores, otimizar nossas estratégias de budget para eventos e, potencialmente, mentorar uma equipe de eventos especializada à medida que a presença global da Fast Track continua a expandir."
+                }
             },
             {
                 id: 'b5',
-                question: "What are your hobbies?",
-                answer: "Since we live here in Malta, I try to take full advantage of the outdoors. I love trekking and spending time at the beach to completely disconnect, usually with my family. I’m also big on sports and music to keep my energy up, but my real creative outlet at home is cooking. It requires a different kind of focus and planning, which is actually a great balance to the fast-paced iGaming world."
+                en: {
+                    question: "What are your hobbies?",
+                    answer: "Since we live here in Malta, I try to take full advantage of the outdoors. I love trekking and spending time at the beach to completely disconnect, usually with my family. I’m also big on sports and music to keep my energy up, but my real creative outlet at home is cooking. It requires a different kind of focus and planning, which is actually a great balance to the fast-paced iGaming world."
+                },
+                pt: {
+                    question: "Quais são os seus hobbies?",
+                    answer: "Como moramos aqui em Malta, tento aproveitar ao máximo as atividades ao ar livre. Adoro fazer trilhas (trekking) e passar tempo na praia para me desconectar completamente, geralmente com a minha família. Também gosto muito de esportes e música para manter minha energia alta, mas meu verdadeiro escape criativo em casa é cozinhar. Exige um tipo diferente de foco e planejamento, o que na verdade é um ótimo equilíbrio para o mundo acelerado do iGaming."
+                }
             },
             {
                 id: 'b6',
-                question: "Do you have any questions for us?",
-                answer: "Yes, I have a couple! Given the sophisticated nature of Fast Track’s CRM, how do your global trade shows currently feed into the sales pipeline—are we optimizing more for high-level brand awareness, or aggressive, quantifiable lead generation? Also, what does the first 90 days look like for the person stepping into this role, specifically regarding taking over the current annual event calendar?"
+                en: {
+                    question: "Do you have any questions for us?",
+                    answer: "Yes, I have a couple! Given the sophisticated nature of Fast Track’s CRM, how do your global trade shows currently feed into the sales pipeline—are we optimizing more for high-level brand awareness, or aggressive, quantifiable lead generation? Also, what does the first 90 days look like for the person stepping into this role, specifically regarding taking over the current annual event calendar?"
+                },
+                pt: {
+                    question: "Você tem alguma pergunta para nós?",
+                    answer: "Sim, tenho algumas! Considerando a natureza sofisticada do CRM da Fast Track, como os seus trade shows globais atualmente alimentam o pipeline de vendas — estamos otimizando mais para brand awareness de alto nível ou para lead generation agressivo e quantificável? Além disso, como seriam os primeiros 90 dias para a pessoa que assumir essa posição, especificamente em relação a herdar o atual calendário anual de eventos?"
+                }
             }
         ];
 
         // Global store to fetch text by ID quickly for the teleprompter
         const allAnswersMap = {};
 
-        // --- Render Accordions ---
+        // --- Translation & Rendering Logic ---
+        function toggleLanguage() {
+            const toggleBox = document.getElementById('lang-toggle');
+            currentLang = toggleBox.checked ? 'pt' : 'en';
+            
+            // Update UI Labels
+            document.getElementById('lang-en').className = `text-xs font-semibold ${currentLang === 'en' ? 'text-indigo-600' : 'text-slate-400'}`;
+            document.getElementById('lang-pt').className = `text-xs font-semibold ${currentLang === 'pt' ? 'text-indigo-600' : 'text-slate-400'}`;
+            
+            if (currentLang === 'pt') {
+                document.getElementById('ui-title').textContent = "Assistente de Entrevista - Fast Track";
+                document.getElementById('ui-subtitle').textContent = "Cargo: Event Manager | Entrevistadora: Paulinha";
+                document.getElementById('ui-core-title').textContent = "Narrativas Principais";
+                document.getElementById('ui-basic-title').textContent = "Estratégia & Comportamento";
+                document.getElementById('ui-live-title').innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>Co-Piloto ao Vivo';
+                document.getElementById('ui-live-desc').textContent = "Digite qualquer pergunta inesperada que a entrevistadora fizer para obter uma resposta perfeitamente adaptada instantaneamente.";
+                document.getElementById('live-question').placeholder = "ex: Como você gerencia o budget de fornecedores?";
+                document.getElementById('btn-text').textContent = "Gerar Resposta";
+                document.getElementById('ui-suggested').textContent = "Resposta Sugerida:";
+            } else {
+                document.getElementById('ui-title').textContent = "Fast Track Interview Helper";
+                document.getElementById('ui-subtitle').textContent = "Role: Event Manager | Interviewer: Paulinha";
+                document.getElementById('ui-core-title').textContent = "Core Narratives";
+                document.getElementById('ui-basic-title').textContent = "Strategic & Behavioral";
+                document.getElementById('ui-live-title').innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>Live Interview Co-Pilot';
+                document.getElementById('ui-live-desc').textContent = "Type any unexpected question the interviewer asks to get a perfectly tailored response instantly.";
+                document.getElementById('live-question').placeholder = "e.g. How do you measure the ROI of an event?";
+                document.getElementById('btn-text').textContent = "Generate Answer";
+                document.getElementById('ui-suggested').textContent = "Suggested Answer:";
+            }
+
+            // Close all accordions before re-rendering to prevent UI glitches
+            currentlyOpenId = null;
+            currentlyOpenIcon = null;
+
+            // Clear containers
+            document.getElementById('core-accordion-container').innerHTML = '';
+            document.getElementById('basic-accordion-container').innerHTML = '';
+
+            // Re-render
+            renderCategory(coreQuestions, 'core-accordion-container');
+            renderCategory(basicQuestions, 'basic-accordion-container');
+        }
+
         function renderCategory(dataList, containerId) {
             const container = document.getElementById(containerId);
             
             dataList.forEach((q) => {
-                allAnswersMap[q.id] = q.answer; // Add to global map
+                allAnswersMap[q.id] = q; // Map stores full object to allow language switching in TP
 
                 const itemHTML = `
                     <div class="border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm transition-all duration-200 hover:shadow-md relative">
@@ -266,7 +406,7 @@
                             class="w-full text-left px-5 py-4 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset bg-white relative z-10"
                             onclick="toggleAccordion('content-${q.id}', 'icon-${q.id}')"
                         >
-                            <span class="font-semibold text-slate-800 pr-4 text-sm md:text-base">${q.question}</span>
+                            <span class="font-semibold text-slate-800 pr-4 text-sm md:text-base">${q[currentLang].question}</span>
                             <svg 
                                 id="icon-${q.id}"
                                 class="w-5 h-5 text-slate-500 transform transition-transform duration-200 flex-shrink-0" 
@@ -281,7 +421,7 @@
                         <div id="content-${q.id}" class="accordion-content relative z-0">
                             <div class="px-5 pb-16 pt-1 text-slate-700 leading-relaxed border-t border-slate-100">
                                 <p class="pl-4 border-l-4 border-blue-500 font-medium text-sm md:text-base">
-                                    ${q.answer}
+                                    ${q[currentLang].answer}
                                 </p>
                             </div>
                             <button onclick="openPredefinedTeleprompter('${q.id}')" class="absolute bottom-4 right-5 px-3 py-1.5 bg-slate-800 text-white rounded-md text-sm font-medium hover:bg-slate-700 flex items-center gap-2 shadow-sm transition-colors z-20">
@@ -295,6 +435,7 @@
             });
         }
 
+        // Initial Render
         renderCategory(coreQuestions, 'core-accordion-container');
         renderCategory(basicQuestions, 'basic-accordion-container');
 
@@ -356,12 +497,17 @@
             inputField.disabled = true;
             submitBtn.disabled = true;
             loadingSpinner.classList.remove('hidden');
-            btnText.textContent = "Thinking...";
+            btnText.textContent = currentLang === 'pt' ? "Pensando..." : "Thinking...";
             resultContainer.classList.add('hidden');
             successContent.classList.add('hidden');
             errorText.classList.add('hidden');
 
             const apiKey = "AIzaSyBoIETWHhNV6Zq8m7_Q1kvwy0cm7rml55Y";
+
+            // Instruct Gemini to answer in the active language while preserving industry jargon
+            const languageInstruction = currentLang === 'pt' 
+                ? 'CRITICAL RULE: You MUST provide the final answer in Brazilian Portuguese (PT-BR). However, you MUST keep corporate/iGaming jargon in English (e.g. ROI, B2B, CRM, stand, KPI, networking, budget, break-down, hands-on, end-to-end, workarounds).'
+                : 'Respond in standard English.';
 
             const systemPrompt = `You are a real-time interview assistant for Pedro Simplicio. 
             Pedro is currently in an interview for the Event Manager position at Fast Track (an iGaming CRM company in Malta). 
@@ -373,8 +519,10 @@
             The user will type a question the interviewer just asked. 
             Write a natural, conversational, highly intelligent answer for Pedro to read aloud. 
             Keep it concise (2-4 sentences max). 
-            Speak in the first person ("I"). 
-            Frame Pedro as a strategic, data-driven professional who loves being in the trenches of event execution.`;
+            Speak in the first person ("I" / "Eu"). 
+            Frame Pedro as a strategic, data-driven professional who loves being in the trenches of event execution.
+            
+            ${languageInstruction}`;
 
             const payload = {
                 contents: [{ parts: [{ text: questionText }] }],
@@ -411,7 +559,7 @@
                 } catch (err) {
                     attempt++;
                     if (attempt >= delays.length) {
-                        errorMessage = "Failed to get an answer. Please try rephrasing.";
+                        errorMessage = currentLang === 'pt' ? "Falha ao gerar resposta. Tente reformular a pergunta." : "Failed to get an answer. Please try rephrasing.";
                     } else {
                         await new Promise(res => setTimeout(res, delays[attempt - 1]));
                     }
@@ -421,7 +569,7 @@
             inputField.disabled = false;
             submitBtn.disabled = false;
             loadingSpinner.classList.add('hidden');
-            btnText.textContent = "Generate Answer";
+            btnText.textContent = currentLang === 'pt' ? "Gerar Resposta" : "Generate Answer";
             resultContainer.classList.remove('hidden');
 
             if (success) {
@@ -454,7 +602,8 @@
         let tpAnimationId = null;
 
         function openPredefinedTeleprompter(id) {
-            launchTeleprompter(allAnswersMap[id]);
+            // Fetches the answer corresponding to the currently active language
+            launchTeleprompter(allAnswersMap[id][currentLang].answer);
         }
 
         function openLiveTeleprompter() {
@@ -498,11 +647,11 @@
 
         function updatePlayUI() {
             if (tpIsPlaying) {
-                tpPlayText.textContent = "Pause (Space)";
+                tpPlayText.textContent = currentLang === 'pt' ? "Pausar (Space)" : "Pause (Space)";
                 tpIconPlay.classList.add('hidden');
                 tpIconPause.classList.remove('hidden');
             } else {
-                tpPlayText.textContent = "Play (Space)";
+                tpPlayText.textContent = currentLang === 'pt' ? "Tocar (Space)" : "Play (Space)";
                 tpIconPlay.classList.remove('hidden');
                 tpIconPause.classList.add('hidden');
             }
