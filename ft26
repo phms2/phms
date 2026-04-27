@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Track: CMO Interview Masterclass</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+
+        /* 3D Flip Utilities */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .flipped { transform: rotateY(180deg); }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(99, 102, 241, 0.4); border-radius: 20px; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-white transition-colors duration-300 min-h-screen">
+
+    <div class="p-6 md:p-10 max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-12 relative text-center md:text-left flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 dark:border-slate-700/30 pb-6 transition-colors">
+            <div>
+                <div class="inline-flex items-center gap-3 px-4 py-2 bg-indigo-100 dark:bg-indigo-600/10 text-indigo-700 dark:text-indigo-500 rounded-full mb-4 border border-indigo-200 dark:border-indigo-500/20 transition-colors">
+                    <i class="ph ph-monitor text-lg"></i>
+                    <span class="text-sm font-bold tracking-wide uppercase">C-Suite Interview Playbook</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">Fast Track: The Masterclass</h1>
+                <p class="text-slate-600 dark:text-slate-400 text-lg mt-3 max-w-2xl transition-colors">Your complete dashboard for navigating the CMO and CPO interviews. Click any card to reveal your strategic answer.</p>
+            </div>
+            <button id="themeToggle" class="mt-6 md:mt-0 p-3 rounded-full flex items-center justify-center transition-all bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 shadow-sm dark:bg-slate-800 dark:text-yellow-400 dark:hover:bg-slate-700 dark:border-slate-700" title="Toggle Theme">
+                <i id="themeIcon" class="ph ph-sun text-xl"></i>
+            </button>
+        </header>
+
+        <!-- Dashboard Grid -->
+        <div id="cardGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <!-- Cards injected via JS -->
+        </div>
+    </div>
+
+    <!-- Fullscreen Modal Overlay -->
+    <div id="modalOverlay" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-slate-900/80 backdrop-blur-md transition-opacity duration-200 opacity-0">
+        <div class="relative w-full max-w-3xl mx-auto transform scale-95 transition-transform duration-200" id="modalContentWrapper">
+            
+            <!-- Close Button -->
+            <button id="closeModal" class="absolute -top-12 right-0 md:-right-12 md:top-0 p-2 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 rounded-full transition-colors z-50 border border-slate-600 shadow-xl">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+            
+            <!-- Flippable Card -->
+            <div class="relative w-full h-[600px] md:h-[500px] cursor-pointer perspective-1000 group" id="flashcardContainer">
+                <div id="flashcardInner" class="relative w-full h-full transition-transform duration-500 transform-style-3d flipped">
+                    
+                    <!-- Front (Question) -->
+                    <div id="cardFront" class="absolute w-full h-full backface-hidden border-2 rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col justify-between transition-colors duration-300 bg-white border-indigo-100 dark:bg-slate-800 dark:border-slate-700">
+                        <div class="overflow-y-auto pr-2 custom-scrollbar">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div id="modalIconContainer" class="p-3 rounded-xl shadow-inner bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 transition-colors">
+                                    <i id="modalIcon" class="text-2xl"></i>
+                                </div>
+                                <span id="modalCategory" class="text-sm font-bold text-indigo-500 uppercase tracking-widest"></span>
+                            </div>
+                            <h3 id="modalTitle" class="text-2xl md:text-3xl font-extrabold mb-6 leading-tight text-slate-800 dark:text-white transition-colors"></h3>
+                            <div id="modalFrontContent" class="text-base md:text-lg leading-relaxed whitespace-pre-wrap font-medium text-slate-600 dark:text-slate-300 transition-colors"></div>
+                        </div>
+                        <div class="flex items-center justify-center gap-2 text-indigo-500 font-bold text-sm md:text-base animate-pulse mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                            <i class="ph ph-arrows-clockwise text-lg"></i> Click to reveal your Playbook Answer
+                        </div>
+                    </div>
+
+                    <!-- Back (Answer) -->
+                    <div id="cardBack" class="absolute w-full h-full backface-hidden border-2 rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col rotate-y-180 bg-slate-800 text-slate-100 border-slate-700">
+                        <h3 class="text-xl md:text-2xl font-bold mb-6 border-b border-slate-600 pb-4 flex items-center gap-2">
+                            <i class="ph-fill ph-lightning text-yellow-400 text-2xl"></i> Your Strategic Response
+                        </h3>
+                        <div id="modalBackContent" class="space-y-4 text-slate-300 text-sm md:text-base leading-relaxed overflow-y-auto pr-2 custom-scrollbar">
+                            <!-- Injected content -->
+                        </div>
+                        <div class="mt-auto pt-6 flex flex-col items-center gap-3">
+                            <span class="inline-block px-4 py-2 bg-slate-900/80 rounded-full text-xs md:text-sm font-bold tracking-wide text-slate-300 shadow-inner border border-slate-700">
+                                TACTIC: Deliver with complete operational confidence
+                            </span>
+                            <div class="flex items-center justify-center gap-2 text-slate-400 font-medium text-sm animate-pulse">
+                                <i class="ph ph-arrows-clockwise"></i> Click to review the question
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Navigation Info -->
+            <div id="modalProgress" class="absolute -bottom-10 left-0 right-0 text-center text-slate-500 dark:text-slate-400 font-medium text-sm tracking-widest uppercase transition-colors"></div>
+        </div>
+    </div>
+
+    <script>
+        // Data Store
+        const cards = [
+            {
+                title: "1. The Elevator Pitch",
+                category: "The Opening",
+                icon: "ph-suitcase",
+                frontContent: "\"Tell me about yourself. Walk me through your background.\"",
+                backContent: `
+                    <p><strong>The Hook:</strong> "I’m a communications and brand strategist by trade, but an event producer at heart."</p>
+                    <p><strong>The Background:</strong> "I’ve spent the last 8+ years in the iGaming ecosystem, currently driving global brand visibility for Playhill Limited (Clever Advertising). Before this, I did high-level strategy consulting for Fortune 500s like Mercedes and P&G."</p>
+                    <p><strong>The Bridge:</strong> "What ties my career together is a deep understanding of how to translate business KPIs into physical, measurable experiences. I’m here today because I want to double down on the execution side of that equation, specializing entirely in creating world-class events."</p>
+                `
+            },
+            {
+                title: "2. Product Alignment: Why Fast Track?",
+                category: "Motivation",
+                icon: "ph-cpu",
+                frontContent: "\"Why Fast Track? What is your understanding of our CRM and what we do?\"",
+                backContent: `
+                    <p><strong>The Tech Disruptor:</strong> "Fast Track is solving the biggest bottleneck in iGaming: siloed data. You provide a centralized CRM that allows operators to automate workflows and personalize player engagement at scale."</p>
+                    <p><strong>Marketing Appeal:</strong> "From a marketing perspective, it is infinitely more exciting to build events and brand narratives around a true tech-disruptor than a market follower."</p>
+                    <p><strong>Cultural Fit:</strong> "Culturally, your 'Great Place to Work' certification and transparent leadership style perfectly align with the dynamic, modern environment I want to build my career in."</p>
+                `
+            },
+            {
+                title: "3. The 'Specialization' Pivot",
+                category: "Career Trajectory",
+                icon: "ph-target",
+                frontContent: "\"Why are you interested in this mid-level Event Manager role instead of a Head of Department?\"",
+                backContent: `
+                    <p><strong>The Honest Truth:</strong> "In my current role, I oversee a broad spectrum of communications—PR, brand strategy, and media relations. But the truth is, the area I consistently find the most rewarding is the direct, hands-on execution of our events."</p>
+                    <p><strong>The Drive:</strong> "Whether I’m on the floor managing our presence at an SBC Summit or organizing an internal activation, that’s where I thrive. I don't want to just draw blueprints; I want to build the machine."</p>
+                    <p><strong>The Specialization:</strong> "I applied for this specific role because I am looking to specialize. I want to take the logistical and operational expertise I’m actively using right now and dedicate 100% of my energy to elevating Fast Track’s event presence, without the distraction of running a broader PR department."</p>
+                `
+            },
+            {
+                title: "4. The ROI Question (CMO Focus)",
+                category: "Commercial Strategy",
+                icon: "ph-chart-bar",
+                frontContent: "\"Events are our biggest marketing expense. How do you ensure our global trade shows actually drive business value?\"",
+                backContent: `
+                    <p><strong>The Mindset:</strong> "I view events as physical manifestations of the marketing funnel. My background in strategy consulting means I don't plan events in a vacuum."</p>
+                    <p><strong>The Process:</strong> "I collaborate directly with commercial and marketing leads to understand the primary KPI. Is this show about high-visibility brand awareness, or aggressive lead generation?"</p>
+                    <p><strong>The Execution:</strong> "Once the KPI is defined, I design the booth journey, the speaking slots, and the CRM follow-up protocols to aggressively deliver on those specific metrics. It’s a targeted commercial operation, not just a party."</p>
+                `
+            },
+            {
+                title: "5. The Audit: Fast Track's Booth",
+                category: "Booth Strategy",
+                icon: "ph-megaphone",
+                frontContent: "\"What do you think of our current booth design?\"",
+                backContent: `
+                    <p><strong>The Hook:</strong> "I’ve seen thousands of booths in iGaming. Fast Track’s is a masterclass in 'Warm Tech'. The vertical timber mixed with LEDs creates a premium lounge vibe, avoiding the sterile look of standard tech booths."</p>
+                    <p><strong>The 'Lead Gen' Pivot:</strong> "However, since your primary goal is Lead Gen, we need to optimize the 'Transactional Zone' (the bar). The booth is beautiful, but we must make data capture frictionless."</p>
+                    <p><strong>The Optimization:</strong> "Instead of clunky iPads, we embed sleek, branded NFC/QR plates directly onto the wooden slats. When a rep finishes a pitch, the prospect taps their phone against the wall to drop their info into our CRM. Premium aesthetic, accelerated capture."</p>
+                `
+            },
+            {
+                title: "6. The Proof: SBC Lisbon 2025",
+                category: "Scale & Complexity",
+                icon: "ph-trophy",
+                frontContent: "\"Tell me about your capacity to handle massive scale. How did you manage SBC Lisbon?\"",
+                backContent: `
+                    <p><strong>The Context:</strong> "This was Clever Advertising's largest historical presence. A Platinum Sponsorship execution."</p>
+                    <p><strong>The Scale:</strong> "I coordinated a 100+ person delegation, managed a massive booth footprint, and secured multiple C-level speaking slots."</p>
+                    <p><strong>The Action:</strong> "I led the end-to-end execution. I approved the 3D renders with the builder, mapped the lead-gen targets, and managed VIP hospitality schedules."</p>
+                    <p><strong>The Tech:</strong> "I utilized a centralized project timeline so our C-level knew exactly where they needed to be for their speaking slots, eliminating on-site confusion."</p>
+                `
+            },
+            {
+                title: "7. Phase 1: Pre-Event Kick-off",
+                category: "The Process",
+                icon: "ph-check-square",
+                frontContent: "\"Walk me through your process when an event is confirmed. How do you structure the crucial months before the show?\"",
+                backContent: `
+                    <p><strong>1. Commercial Alignment:</strong> "I start with the CMO and Sales Director. What is the KPI? Total leads? Brand awareness? This dictates how we split the budget."</p>
+                    <p><strong>2. Reverse Engineering the Timeline:</strong> "I take the event date and work backward in Asana to set strict deadlines. For example, if the event is Nov 1st, Marketing must finalize booth messaging by Sept 1st so Design can finish renders for the builder's print deadline in October."</p>
+                    <p><strong>3. Vendor Tendering:</strong> "I activate the 3-Proposal Rule for builders and AV, negotiating early-bird rates. Simultaneously, I align with our travel coordinator to lock in proximity hotels before prices spike."</p>
+                `
+            },
+            {
+                title: "8. The Tech Stack: Asana Mastery",
+                category: "Operational Tech",
+                icon: "ph-layout",
+                frontContent: "\"How do you actually use Asana to manage a global trade show without things getting chaotic?\"",
+                backContent: `
+                    <p><strong>Templates & Standardization:</strong> "I build Master Event Templates. Every major show shares a core 100-point checklist. This ensures zero missed steps for repeat events."</p>
+                    <p><strong>Vendor Integration:</strong> "I invite key contractors (like stand builders) into the project as Guests. They upload invoices and CAD files directly to specific tasks, bypassing messy email threads."</p>
+                    <p><strong>Executive Portfolios:</strong> "For C-levels like yourself, I use Portfolios and Timeline views. You get a real-time snapshot of the event's health, budget, and dependencies without needing to micromanage my daily tasks."</p>
+                `
+            },
+            {
+                title: "9. Financial Maturity & Budget",
+                category: "Vendor Management",
+                icon: "ph-currency-dollar",
+                frontContent: "\"How do you prove that you treat the event budget like it's your own money?\"",
+                backContent: `
+                    <p><strong>The System:</strong> "I strictly enforce a '3-Proposal Minimum' policy for all major expenditures. I compare not just price, but historical reliability and SLA guarantees."</p>
+                    <p><strong>Negotiation Tactics:</strong> "For global shows, I leverage 'Early Bird' rates and negotiate aggressive rebates based on our total volume (e.g., bundling catering with AV services)."</p>
+                    <p><strong>Accountability:</strong> "I maintain an active budget tracker that compares projected vs. actual spend daily. I don't wait for post-event invoices to realize we overspent."</p>
+                `
+            },
+            {
+                title: "10. Phase 2: On-Site Execution",
+                category: "The Process",
+                icon: "ph-gear",
+                frontContent: "\"What does your day look like when the exhibition actually opens?\"",
+                backContent: `
+                    <p><strong>1. The Handover & Build:</strong> "I am the first on-site. I sign off on the stand build, run a full AV/demo stress test, and ensure the lead capture tech is perfectly synced to the CRM."</p>
+                    <p><strong>2. The Daily Stand-up:</strong> "Before the doors open, I run a 10-minute briefing with the sales team and C-level. I give them 'Battle Cards'—who the key targets are today, what the VIP hospitality schedule is, and where they need to be."</p>
+                    <p><strong>3. Floor Operations:</strong> "During the show, I am invisible but omnipresent. I manage vendor catering refills, troubleshoot tech glitches, and ensure executives move seamlessly between speaking slots and private dinners."</p>
+                `
+            },
+            {
+                title: "11. Crisis: The SBC Lisbon Disasters",
+                category: "Troubleshooting",
+                icon: "ph-warning",
+                frontContent: "\"Tell us about a time an event went wrong. How did you handle the pressure?\"",
+                backContent: `
+                    <p><strong>The Core Issue:</strong> "At SBC Lisbon, our builder poorly executed the reverse side of our massive centerpiece 3D 'V' logo. Plus, meeting rooms received bulky, dripping ground ACs instead of split units, the mini-fridge didn't fit, and catering was late."</p>
+                    <p><strong>The On-the-Ground Fix:</strong> "I collaborated with the builder for an overnight fix on the logo, applying a reflective film to maintain brand coherence. For the AC and fridge, I relied on my direct contacts with local coordinators. I'm never above running out to buy a stand fan or snacks myself to keep things moving."</p>
+                    <p><strong>The Result:</strong> "Because of our rigorous pre-event briefing, critical components like speaking slots and sponsorships were flawless. The team and visitors just experienced a perfect event. They never felt the behind-the-scenes chaos."</p>
+                `
+            },
+            {
+                title: "12. VIP Hospitality & Stakeholders",
+                category: "Experience Management",
+                icon: "ph-users",
+                frontContent: "\"How do you handle the high-maintenance aspects of C-level executives and key clients beyond the exhibition floor?\"",
+                backContent: `
+                    <p><strong>The Curated Experience:</strong> "At SiGMA, I orchestrated private executive dinners for 20+ Tier-1 clients. This included menu curation, private transport logistics, and strategic seating plans to maximize commercial networking."</p>
+                    <p><strong>Executive Briefings:</strong> "I don't just send executives to meetings. I provide them with 'Battle Cards'—briefings on who they are meeting, the commercial objective, and logistical details."</p>
+                    <p><strong>The 'Concierge' Mindset:</strong> "While I have a team member handling flights, I oversee the strategy. I approve hotel selections based on venue proximity and ensure VIP transfer schedules are flawless."</p>
+                `
+            },
+            {
+                title: "13. Phase 3: Post-Event Actions",
+                category: "The Process",
+                icon: "ph-chart-bar",
+                frontContent: "\"The event is over. The team goes home. What do you do?\"",
+                backContent: `
+                    <p><strong>1. The Breakdown:</strong> "I oversee the physical teardown, ensuring reusable assets are shipped back safely and final sign-offs are given to the venue to avoid penalty fees."</p>
+                    <p><strong>2. Lead Velocity:</strong> "Within 24 hours, I ensure all scanned leads are scrubbed, categorized, and uploaded into Salesforce/HubSpot so Sales can begin sequences while the leads are 'hot'."</p>
+                    <p><strong>3. The Post-Mortem Report:</strong> "I deliver a closed-loop report to the CMO. I present Budget vs. Actual spend, Leads generated vs. Target, Vendor Performance, and a 'Keep/Drop/Optimize' recommendation."</p>
+                `
+            },
+            {
+                title: "14. Internal Culture (CPO Focus)",
+                category: "Team Alignment",
+                icon: "ph-heart",
+                frontContent: "\"Fast Track is deeply protective of our 'Great Place to Work' culture. How do you approach internal events compared to external trade shows?\"",
+                backContent: `
+                    <p><strong>The Philosophy:</strong> "I strongly believe that your employees are your most important VIP audience."</p>
+                    <p><strong>The Clever Experience:</strong> "At Clever Advertising, I coordinate internal events for over 370 specialists. A perfectly executed internal event builds a unified, highly engaged culture."</p>
+                    <p><strong>The ROI Connection:</strong> "That internal alignment naturally translates into external ROI. When those same employees go to B2B trade shows, they represent the brand with genuine pride and enthusiasm. I would treat the internal Growth Summit with the exact same operational rigor as SBC Lisbon."</p>
+                `
+            },
+            {
+                title: "15. Scaling: Overlapping Events",
+                category: "High-Level Logistics",
+                icon: "ph-calendar",
+                frontContent: "\"We scale fast. How do you handle managing SiGMA Malta while simultaneously planning ICE London and a side-event in LatAm?\"",
+                backContent: `
+                    <p><strong>The Strategy:</strong> "You don't manage multiple events simultaneously; you manage their *timelines*. The key is ensuring critical milestones (like RFP deadlines or design approvals) do not overlap."</p>
+                    <p><strong>The Tech:</strong> "This is where Asana Portfolios shine. I use the Workload view. If I see a bottleneck where three events require my attention in the same week, I shift non-critical tasks earlier."</p>
+                    <p><strong>Delegation:</strong> "Because I use standardized templates for every show, I don't reinvent the wheel. I can delegate specific, isolated tasks (like booking flights or ordering standard merch) to support staff, freeing me to focus strictly on strategy."</p>
+                `
+            }
+        ];
+
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlElement = document.documentElement;
+        const cardGrid = document.getElementById('cardGrid');
+        
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalContentWrapper = document.getElementById('modalContentWrapper');
+        const closeModalBtn = document.getElementById('closeModal');
+        const flashcardContainer = document.getElementById('flashcardContainer');
+        const flashcardInner = document.getElementById('flashcardInner');
+        
+        const modalIcon = document.getElementById('modalIcon');
+        const modalCategory = document.getElementById('modalCategory');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalFrontContent = document.getElementById('modalFrontContent');
+        const modalBackContent = document.getElementById('modalBackContent');
+        const modalProgress = document.getElementById('modalProgress');
+
+        // Theme Toggle Logic
+        themeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            const isDark = htmlElement.classList.contains('dark');
+            themeIcon.className = isDark ? 'ph ph-sun text-xl' : 'ph ph-moon text-xl';
+        });
+
+        // Initialize Grid
+        function renderGrid() {
+            cardGrid.innerHTML = '';
+            cards.forEach((card, idx) => {
+                const cardEl = document.createElement('div');
+                // Removed dynamic theme classes, relying on tailwind dark: variants
+                cardEl.className = 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-md hover:shadow-indigo-200 dark:hover:shadow-indigo-500/20 hover:border-indigo-400 dark:hover:border-indigo-500 group flex flex-col min-h-[160px]';
+                
+                cardEl.innerHTML = `
+                    <div class="flex items-start justify-between mb-3 gap-2">
+                        <div class="p-2 rounded-lg bg-indigo-50 dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform shrink-0">
+                            <i class="${card.icon} text-lg"></i>
+                        </div>
+                        <span class="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider text-right leading-tight">${card.category}</span>
+                    </div>
+                    <h3 class="text-sm md:text-base font-bold text-slate-900 dark:text-white mb-2 group-hover:text-indigo-500 transition-colors leading-tight">${card.title}</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-xs line-clamp-2 mt-auto">
+                        ${card.frontContent.replace(/["\n]/g, ' ')}
+                    </p>
+                `;
+                
+                cardEl.addEventListener('click', () => openModal(idx));
+                cardGrid.appendChild(cardEl);
+            });
+        }
+
+        // Modal Logic
+        function openModal(idx) {
+            const card = cards[idx];
+            
+            // Populate content
+            modalIcon.className = `${card.icon} text-2xl`;
+            modalCategory.textContent = card.category;
+            modalTitle.textContent = card.title;
+            modalFrontContent.textContent = card.frontContent.replace(/\\n/g, '\n');
+            modalBackContent.innerHTML = card.backContent;
+            modalProgress.textContent = `Topic ${idx + 1} of ${cards.length}`;
+
+            // Initialize as flipped (showing back/answer by default)
+            flashcardInner.classList.add('flipped');
+
+            // Show modal
+            modalOverlay.classList.remove('hidden');
+            // Small delay to trigger transitions
+            setTimeout(() => {
+                modalOverlay.classList.remove('opacity-0');
+                modalOverlay.classList.add('opacity-100');
+                modalContentWrapper.classList.remove('scale-95');
+                modalContentWrapper.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('opacity-100');
+            modalOverlay.classList.add('opacity-0');
+            modalContentWrapper.classList.remove('scale-100');
+            modalContentWrapper.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modalOverlay.classList.add('hidden');
+            }, 200); // Matches transition duration
+        }
+
+        // Event Listeners for Modal
+        closeModalBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+        flashcardContainer.addEventListener('click', () => {
+            flashcardInner.classList.toggle('flipped');
+        });
+
+        // Init
+        renderGrid();
+    </script>
+</body>
+</html>
